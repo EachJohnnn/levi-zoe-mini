@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="header">
+    <view class="title">想吃池</view>
+    <view class="count">共 {{wantDishes.length}} 道菜</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{wantDishes.length === 0}}" class="empty">
+    <view class="empty-text">想吃池还是空的</view>
+    <view class="empty-tip">去菜品详情页加入吧</view>
+  </view>
+
+  <view wx:else class="list">
+    <view class="dish-card" wx:for="{{wantDishes}}" wx:key="_id" data-id="{{item._id}}" bindtap="removeFromWant">
+      <view class="dish-name">{{item.name}}</view>
+      <view class="dish-category">{{item.category || '未分类'}}</view>
+    </view>
+  </view>
+
+  <view class="btn-group">
+    <button class="btn primary" bindtap="generateTonightMenu">生成今晚菜单</button>
+  </view>
+</view>

@@ -1,0 +1,15 @@
+# 忽略敏感文件
+.env
+*.log
+.DS_Store
+Thumbs.db
+
+# 忽略 node_modules
+node_modules/
+cloudfunctions/*/node_modules/
+
+# 忽略临时文件
+tmp/
+dist/
+*.swp
+*.swo

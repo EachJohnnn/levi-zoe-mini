@@ -1,0 +1,49 @@
+<view class="container">
+    <!-- 头部 -->
+    <view class="header">
+      <view class="title">🛒 购物清单</view>
+      <view class="subtitle">{{date}} · 共 {{dishes.length}} 道菜</view>
+    </view>
+
+    <!-- 菜品快捷预览 -->
+    <view class="dishes-bar">
+      <text class="dish-tag" wx:for="{{dishes}}" wx:key="*this">{{item}}</text>
+    </view>
+
+    <!-- 食材列表 -->
+    <view class="section" wx:if="{{items.length > 0}}">
+      <view class="section-title">需要采购的食材</view>
+      <view class="item-row" wx:for="{{items}}" wx:key="name" bindtap="toggleItem" data-index="{{index}}" data-type="item">
+        <view class="checkbox {{item.checked ? 'checked' : ''}}">
+          <text wx:if="{{item.checked}}">✓</text>
+        </view>
+        <view class="item-info {{item.checked ? 'checked-text' : ''}}">
+          <text class="item-name">{{item.name}}</text>
+          <text class="item-amount">{{item.amount}}</text>
+        </view>
+        <view class="checked-by" wx:if="{{item.checked && item.checkedBy}}">
+          {{item.checkedBy}} 已采购
+        </view>
+      </view>
+    </view>
+
+    <!-- 配料列表 -->
+    <view class="section condiments" wx:if="{{condiments.length > 0}}">
+      <view class="section-title">家里常备的配料</view>
+      <view class="item-row" wx:for="{{condiments}}" wx:key="name" bindtap="toggleItem" data-index="{{index}}" data-type="condiment">
+        <view class="checkbox {{item.checked ? 'checked' : ''}}">
+          <text wx:if="{{item.checked}}">✓</text>
+        </view>
+        <view class="item-info {{item.checked ? 'checked-text' : ''}}">
+          <text class="item-name">{{item.name}}</text>
+          <text class="item-amount">{{item.amount}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部操作栏 -->
+    <view class="bottom-bar">
+      <button class="btn secondary" bindtap="copyList">📋 复制清单</button>
+      <button class="btn primary" bindtap="goHistory">📚 历史记录</button>
+    </view>
+  </view>

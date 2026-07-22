@@ -1,0 +1,29 @@
+<view class="container">
+  <view class="header">
+    <view class="title">我们的菜品库</view>
+    <view class="count" wx:if="{{dishes.length}}">共 {{dishes.length}} 道菜</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{dishes.length === 0}}" class="empty">
+    <view class="empty-text">还没有菜品哦</view>
+    <view class="empty-tip">去添加第一道菜吧</view>
+  </view>
+
+  <view wx:else class="list">
+    <view 
+      class="dish-card" 
+      wx:for="{{dishes}}" 
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onDishTap"
+    >
+      <view class="dish-name">{{item.name}}</view>
+      <view class="dish-category">{{item.category || '未分类'}}</view>
+    </view>
+  </view>
+
+  <!-- 底部添加按钮 -->
+  <view class="add-btn" bindtap="goAddDish">＋ 添加新菜品</view>
+</view>

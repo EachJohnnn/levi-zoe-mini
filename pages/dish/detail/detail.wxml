@@ -1,0 +1,49 @@
+<view class="container" wx:if="{{!loading && dish}}">
+  <view class="header">
+    <view class="name">{{dish.name}}</view>
+    <view class="category">{{dish.category || '未分类'}}</view>
+  </view>
+
+  <!-- 食材 -->
+  <view class="section">
+    <view class="section-title">食材</view>
+    <view class="item" wx:for="{{dish.ingredients}}" wx:key="*this">
+      {{item}}
+    </view>
+  </view>
+
+  <!-- 步骤 -->
+  <view class="section">
+    <view class="section-title">步骤</view>
+    <view class="step" wx:for="{{dish.steps}}" wx:key="*this" wx:for-index="idx">
+      <view class="step-num">{{idx + 1}}</view>
+      <view class="step-content">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 小贴士 -->
+  <view class="section" wx:if="{{dish.tips}}">
+    <view class="section-title">小贴士</view>
+    <view class="tips">{{dish.tips}}</view>
+  </view>
+
+  <!-- 视频链接（如果有） -->
+  <view class="section" wx:if="{{dish.videoLinks && dish.videoLinks.length}}">
+    <view class="section-title">视频教程</view>
+    <view class="video-link" wx:for="{{dish.videoLinks}}" wx:key="*this">
+      {{item}}
+    </view>
+  </view>
+
+<!-- 底部操作按钮 -->
+  <view class="btn-group">
+    <button class="btn primary" bindtap="goEdit">编辑菜谱</button>
+    <button class="btn danger" bindtap="onDelete">删除这道菜</button>
+    <button class="btn" bindtap="addToWantList">加入想吃池</button>
+  </view>
+
+</view>
+
+
+
+<view wx:if="{{loading}}" class="loading">加载中...</view>

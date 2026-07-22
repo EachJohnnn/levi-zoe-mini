@@ -1,0 +1,53 @@
+<view class="container">
+    <view class="header">
+      <view class="title">📚 历史购物清单</view>
+      <view class="subtitle">共 {{history.length}} 份记录</view>
+    </view>
+
+    <view class="list" wx:if="{{history.length > 0}}">
+      <view class="history-card {{item.isCurrent ? 'current' : ''}}"
+            wx:for="{{history}}"
+            wx:key="_id"
+            data-id="{{item._id}}"
+            bindtap="goDetail">
+
+        <!-- 当前标记 -->
+        <view class="current-badge" wx:if="{{item.isCurrent}}">当前</view>
+
+        <!-- 每日正式清单标记 -->
+        <view class="official-badge" wx:if="{{item.isOfficial}}">正式购物清单</view>
+
+        <view class="card-header">
+          <view class="date">{{item.formattedDate}} {{item.formattedTime}}</view>
+          <view class="dish-count">{{item.dishes.length}} 道菜</view>
+        </view>
+
+        <view class="dishes">
+          <text class="dish-tag" wx:for="{{item.dishes}}" wx:key="*this">{{item}}</text>
+        </view>
+
+        <view class="progress">
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{item.progress || 0}}%"></view>
+          </view>
+          <view class="progress-text">已采购 {{item.checkedCount}}/{{item.totalCount}}</view>
+        </view>
+
+        <!-- 恢复按钮 -->
+        <button class="restore-btn"
+                wx:if="{{!item.isCurrent}}"
+                data-id="{{item._id}}"
+                catchtap="restoreList">恢复为当前清单</button>
+
+        <!-- 删除按钮 -->
+        <button class="delete-btn"
+                data-id="{{item._id}}"
+                catchtap="deleteList">删除</button>
+      </view>
+    </view>
+
+    <view class="empty" wx:else>
+      <view>还没有历史记录</view>
+      <view class="empty-tip">生成购物清单后会自动保存</view>
+    </view>
+  </view>

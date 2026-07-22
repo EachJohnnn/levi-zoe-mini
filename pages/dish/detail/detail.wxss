@@ -1,0 +1,141 @@
+/* pages/dish/detail/detail.wxss */
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  margin-bottom: 24rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 20rpx rgba(255, 107, 107, 0.08);
+}
+
+.name {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.category {
+  display: inline-block;
+  font-size: 26rpx;
+  color: #FF6B6B;
+  background: #FFF0F0;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+.section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 107, 107, 0.08);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #FF6B6B;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.item {
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.8;
+  padding: 6rpx 0;
+}
+
+.step {
+  display: flex;
+  margin-bottom: 28rpx;
+}
+
+.step:last-child {
+  margin-bottom: 0;
+}
+
+.step-num {
+  width: 44rpx;
+  height: 44rpx;
+  background: #FF6B6B;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+
+.step-content {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.7;
+}
+
+.tips {
+  font-size: 30rpx;
+  color: #666;
+  line-height: 1.7;
+  background: #FFF9F0;
+  padding: 24rpx;
+  border-radius: 12rpx;
+}
+
+.video-link {
+  font-size: 28rpx;
+  color: #576b95;
+  margin-bottom: 12rpx;
+  word-break: break-all;
+}
+
+.loading {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+/* 底部按钮 */
+.btn-group {
+  margin-top: 40rpx;
+  padding: 0 6rpx 20rpx;
+}
+
+.btn {
+  width: 100%;
+  height: 90rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  border: none;
+}
+
+.btn.danger {
+  background: #fff;
+  color: #ff4d4f;
+  border: 2rpx solid #ff4d4f;
+}

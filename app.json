@@ -1,0 +1,22 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/dish/edit",
+    "pages/dish/list/list",
+    "pages/dish/detail/detail",
+    "pages/dish/want-list/want-list",
+    "pages/dish/tonight/tonight",
+    "pages/dish/shopping-list/shopping-list",
+    "pages/dish/shopping-list/history/history",
+    "pages/dish/cooking/cooking"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFF5F5",
+    "navigationBarTitleText": "Levi & Zoe",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFF5F5"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
