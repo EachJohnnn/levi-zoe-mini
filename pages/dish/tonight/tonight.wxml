@@ -28,12 +28,10 @@
 
   <view wx:else class="empty">还没有今晚菜单，去生成一个吧～</view>
 
-  <!-- 购物清单按钮：移出循环，只显示一个 -->
-  <button class="shopping-btn" bindtap="generateShoppingList" wx:if="{{dishes && dishes.length > 0}}">
-    🛒 生成购物清单
-  </button>
+  <!-- 底部操作按钮 -->
+  <view class="bottom-actions" wx:if="{{dishes && dishes.length > 0}}">
+    <button class="action-btn shopping" bindtap="generateShoppingList">🛒 购物清单</button>
+    <button class="action-btn cooking" bindtap="startCooking">🔥 开始做菜</button>
+  </view>
 
-  <button class="start-cooking-btn" bindtap="startCooking" wx:if="{{dishes.length > 0}}">
-    🔥 开始做菜
-  </button>
 </view>

@@ -81,30 +81,57 @@ Page({
     }
   },
 
-  // 原来的微信登录方法（保留，以后新建用户时用）
   onGetUserInfo() {
     const that = this
     wx.showLoading({ title: '登录中...' })
-
+  
     wx.getUserProfile({
       desc: '用于完善会员资料',
       success(profileRes) {
         const userInfo = profileRes.userInfo
-
+  
         wx.cloud.callFunction({
           name: 'login',
           success(cloudRes) {
             const openid = cloudRes.result.openid
             userInfo.openid = openid
-
+  
+            // 1. 保存到本地
             wx.setStorageSync('userInfo', userInfo)
             app.globalData.userInfo = userInfo
-
+  
+            // 2. 写入云数据库 users 集合（关键！）
+            const db = wx.cloud.database()
+            db.collection('users').where({
+              openid: openid
+            }).get().then(res => {
+              if (res.data.length === 0) {
+                // 新用户，创建记录
+                db.collection('users').add({
+                  data: {
+                    openid: openid,
+                    nickName: userInfo.nickName,
+                    avatarUrl: userInfo.avatarUrl,
+                    createTime: new Date(),
+                    coupleId: null
+                  }
+                })
+              } else {
+                // 已存在，更新昵称头像
+                db.collection('users').doc(res.data[0]._id).update({
+                  data: {
+                    nickName: userInfo.nickName,
+                    avatarUrl: userInfo.avatarUrl
+                  }
+                })
+              }
+            })
+  
             that.setData({
               userInfo,
               hasUserInfo: true
             })
-
+  
             wx.hideLoading()
             wx.showToast({ title: '登录成功', icon: 'success' })
             console.log('新登录获取到 openid:', openid)
@@ -191,30 +218,23 @@ doJoinCouple(inviteCode) {
 
   wx.cloud.callFunction({
     name: 'joinCouple',
-    data: {
-      inviteCode: inviteCode
-    },
+    data: { inviteCode },
     success(res) {
+      wx.hideLoading()
       if (res.result.success) {
-        const { coupleId } = res.result
+        const { coupleId, alreadyJoined, msg } = res.result
 
-        // 保存到本地和 globalData
         wx.setStorageSync('coupleId', coupleId)
         app.globalData.coupleId = coupleId
 
-        // 更新页面状态（会自动切换到“已绑定”界面）
-        that.setData({
-          coupleId: coupleId
-        })
+        that.setData({ coupleId })
 
-        wx.hideLoading()
         wx.showToast({
-          title: '加入成功！',
+          title: msg || '加入成功',
           icon: 'success'
         })
-        console.log('✅ 成功加入情侣空间，coupleId:', coupleId)
+        console.log('✅ 加入结果:', res.result)
       } else {
-        wx.hideLoading()
         wx.showToast({
           title: res.result.msg || '加入失败',
           icon: 'none'
@@ -223,8 +243,8 @@ doJoinCouple(inviteCode) {
     },
     fail(err) {
       wx.hideLoading()
-      console.error('加入失败', err)
-      wx.showToast({ title: '加入失败，请重试', icon: 'none' })
+      console.error(err)
+      wx.showToast({ title: '加入失败', icon: 'none' })
     }
   })
 },
@@ -372,6 +392,21 @@ goShoppingList() {
     .catch(err => {
       console.error(err)
       wx.showToast({ title: '加载失败', icon: 'none' })
+    })
+},
+
+showMembers() {
+  const coupleId = wx.getStorageSync('coupleId')
+  if (!coupleId) return
+
+  wx.cloud.database().collection('couples').doc(coupleId).get()
+    .then(res => {
+      const members = res.data.members || []
+      wx.showModal({
+        title: '当前空间成员',
+        content: `共 ${members.length} 人\n\n${members.join('\n')}`,
+        showCancel: false
+      })
     })
 }
 

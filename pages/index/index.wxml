@@ -52,7 +52,7 @@
     </view>
     
     <view class="tip">情侣空间已绑定 ✓</view>
-
+    <button class="btn" bindtap="showMembers">查看情侣空间成员</button>
     <!-- 新增：创建成功后显示邀请码 -->
     <block wx:if="{{inviteCode}}">
       <view class="invite-box">
