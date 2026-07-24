@@ -77,7 +77,10 @@ Page({
   
   addToWantList() {
     const dish = this.data.dish
-    if (!dish) return
+    if (!dish || !dish._id) {
+      wx.showToast({ title: '菜品数据错误', icon: 'none' })
+      return
+    }
   
     wx.showLoading({ title: '加入中...' })
   
@@ -89,10 +92,15 @@ Page({
     }).then(() => {
       wx.hideLoading()
       wx.showToast({ title: '已加入想吃池', icon: 'success' })
+      
+      // 更新本地数据
+      this.setData({
+        'dish.inWantPool': true
+      })
     }).catch(err => {
       wx.hideLoading()
-      console.error(err)
-      wx.showToast({ title: '加入失败', icon: 'none' })
+      console.error('加入想吃池失败', err)
+      wx.showToast({ title: '加入失败，请重试', icon: 'none' })
     })
   }
 })

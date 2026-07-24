@@ -1,48 +1,58 @@
-// cloudfunctions/joinCouple/index.js
 const cloud = require('wx-server-sdk')
-cloud.init({
-  env: cloud.DYNAMIC_CURRENT_ENV
-})
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+const db = cloud.database()
 
 exports.main = async (event, context) => {
+  const { inviteCode } = event
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID
-  const { inviteCode } = event
 
-  if (!inviteCode) {
-    return { success: false, msg: '邀请码不能为空' }
+  if (!inviteCode || inviteCode.length !== 6) {
+    return { success: false, msg: '邀请码无效' }
   }
 
-  const db = cloud.database()
-  const couples = db.collection('couples')
+  try {
+    // 查找邀请码对应的情侣空间
+    const coupleRes = await db.collection('couples').where({
+      inviteCode: inviteCode
+    }).get()
 
-  // 查找匹配的邀请码
-  const coupleRes = await couples.where({
-    inviteCode: inviteCode,
-    status: 'active'
-  }).get()
-
-  if (coupleRes.data.length === 0) {
-    return { success: false, msg: '邀请码不存在或已失效' }
-  }
-
-  const couple = coupleRes.data[0]
-
-  // 检查是否已经加入
-  if (couple.members && couple.members.includes(openid)) {
-    return { success: false, msg: '你已经加入该空间' }
-  }
-
-  // 把当前用户加入 members 数组
-  await couples.doc(couple._id).update({
-    data: {
-      members: db.command.push(openid)
+    if (coupleRes.data.length === 0) {
+      return { success: false, msg: '邀请码不存在' }
     }
-  })
 
-  return {
-    success: true,
-    coupleId: couple._id,
-    inviteCode: inviteCode
+    const couple = coupleRes.data[0]
+    const coupleId = couple._id
+
+    // 检查是否已经是成员
+    const members = couple.members || []
+    const alreadyJoined = members.includes(openid)
+
+    if (!alreadyJoined) {
+      // 还没加入，添加成员
+      await db.collection('couples').doc(coupleId).update({
+        data: {
+          members: db.command.push(openid)
+        }
+      })
+    }
+
+    // 更新用户表的 coupleId（无论是否已加入都更新）
+    const userRes = await db.collection('users').where({ openid }).get()
+    if (userRes.data.length > 0) {
+      await db.collection('users').doc(userRes.data[0]._id).update({
+        data: { coupleId }
+      })
+    }
+
+    return {
+      success: true,
+      coupleId,
+      alreadyJoined,
+      msg: alreadyJoined ? '你已在该情侣空间中' : '加入成功'
+    }
+  } catch (err) {
+    console.error(err)
+    return { success: false, msg: '加入失败，请重试' }
   }
 }

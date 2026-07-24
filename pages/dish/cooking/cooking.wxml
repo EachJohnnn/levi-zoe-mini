@@ -1,2 +1,76 @@
-<!--pages/dish/cooking/cooking.wxml-->
-<text>pages/dish/cooking/cooking.wxml</text>
+<view class="container">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-text">AI 正在规划做菜流程...</view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view wx:elif="{{errorMsg}}" class="error-box">
+    <view class="error-title">出错了</view>
+    <view class="error-text">{{errorMsg}}</view>
+    <button class="retry-btn" bindtap="retryLoad">重试</button>
+  </view>
+
+  <block wx:elif="{{sop}}">
+    <!-- 顶部标签切换 -->
+    <view class="tab-bar">
+      <view class="tab {{currentStage === 'prep' ? 'active' : ''}}" bindtap="switchTab" data-stage="prep">
+        备菜
+        <view wx:if="{{prepProgress === 100}}" class="tab-done">✓</view>
+      </view>
+      <view class="tab {{currentStage === 'cooking' ? 'active' : ''}}" bindtap="switchTab" data-stage="cooking">
+        做菜
+        <view wx:if="{{cookingProgress === 100}}" class="tab-done">✓</view>
+      </view>
+    </view>
+
+    <!-- 备菜阶段 -->
+    <view class="stage" wx:if="{{currentStage === 'prep'}}">
+      <view class="stage-title">📋 备菜清单</view>
+      <view class="step-item"
+            wx:for="{{sop.prep}}"
+            wx:key="index"
+            data-index="{{index}}"
+            bindtap="togglePrepStep">
+        <view class="checkbox {{completedPrep[index] ? 'checked' : ''}}">
+          <text wx:if="{{completedPrep[index]}}">✓</text>
+        </view>
+        <view class="step-info {{completedPrep[index] ? 'done' : ''}}">
+          <text class="step-name">{{item.ingredient}} {{item.quantity}}</text>
+          <text class="step-desc">{{item.action}}</text>
+        </view>
+      </view>
+    </view>
+
+<!-- 做菜阶段 -->
+<view class="stage" wx:if="{{currentStage === 'cooking'}}">
+  <view wx:for="{{sop.cook}}" wx:for-item="cookItem" wx:key="dish">
+    <view class="dish-cook-card">
+      <!-- 菜名标题 -->
+      <view class="dish-cook-title">🍳 {{cookItem.dish}}</view>
+
+      <!-- 步骤列表 -->
+      <view wx:if="{{cookItem.steps.length > 0}}">
+        <view class="step-item"
+              wx:for="{{cookItem.steps}}"
+              wx:for-item="stepText"
+              wx:key="stepIndex"
+              data-dish="{{cookItem.dish}}"
+              data-index="{{index}}"
+              bindtap="toggleCookStep">
+          <view class="checkbox {{completedCook[cookItem.dish + '_' + index] ? 'checked' : ''}}">
+            <text wx:if="{{completedCook[cookItem.dish + '_' + index]}}">✓</text>
+          </view>
+          <text class="step-text {{completedCook[cookItem.dish + '_' + index] ? 'done' : ''}}">
+            <text class="step-dish-tag">{{cookItem.dish}}</text> {{stepText}}
+          </text>
+        </view>
+      </view>
+
+      <!-- 无步骤时 -->
+      <view wx:else class="empty-steps">暂无步骤</view>
+    </view>
+  </view>
+</view>
+  </block>
+</view>

@@ -17,6 +17,13 @@ Page({
     }
   },
 
+  onShow() {
+    // 从购物清单页面返回后刷新菜单数据
+    if (this.data.menu && this.data.menu._id) {
+      this.loadTonightMenu(this.data.menu._id)
+    }
+  },
+
   loadTonightMenu(id) {
     this.setData({ loading: true })
     wx.cloud.database().collection('tonightMenus').doc(id).get()
@@ -119,20 +126,28 @@ Page({
   },
 
   generateShoppingList() {
-    // 检查菜单数据是否加载完成
+    const app = getApp()
+  
     if (!this.data.menu || !this.data.menu._id) {
       wx.showToast({ title: '菜单数据未加载', icon: 'none' })
       return
     }
-
+  
     if (!this.data.dishes || this.data.dishes.length === 0) {
       wx.showToast({ title: '菜单中没有菜', icon: 'none' })
       return
     }
-
+  
+    // 检查缓存
+    if (this.data.menu.shoppingListId) {
+      wx.navigateTo({
+        url: `/pages/dish/shopping-list/shopping-list?id=${this.data.menu.shoppingListId}`
+      })
+      return
+    }
+  
     wx.showLoading({ title: 'AI 汇总中...' })
-
-    // 1. 调用云函数生成购物清单
+  
     wx.cloud.callFunction({
       name: 'generateShoppingList',
       data: {
@@ -143,28 +158,18 @@ Page({
       }
     }).then(res => {
       wx.hideLoading()
-
+  
       if (!res.result || !res.result.success) {
         const errMsg = (res.result && res.result.error) || '生成失败'
-        console.error('购物清单生成失败:', errMsg)
-        wx.showModal({
-          title: '生成失败',
-          content: errMsg,
-          showCancel: false
-        })
+        wx.showModal({ title: '生成失败', content: errMsg, showCancel: false })
         return
       }
-
+  
       const { items, condiments } = res.result.data
-
-      // 2. 将旧的当前清单标记为 isCurrent: false
       const coupleId = wx.getStorageSync('coupleId')
-      wx.cloud.database().collection('shoppingLists')
-        .where({ coupleId, isCurrent: true })
-        .update({ data: { isCurrent: false } })
-
-      // 3. 创建新的购物清单
-      return wx.cloud.database().collection('shoppingLists').add({
+      const db = wx.cloud.database()
+  
+      db.collection('shoppingLists').add({
         data: {
           coupleId: coupleId,
           menuId: this.data.menu._id,
@@ -176,21 +181,37 @@ Page({
           createTime: new Date(),
           createdBy: app.globalData.userInfo?.openid || ''
         }
-      })
-
-    }).then(res => {
-      if (!res || !res._id) {
+      }).then(addRes => {
+        if (!addRes || !addRes._id) {
+          wx.showToast({ title: '保存失败', icon: 'none' })
+          return
+        }
+  
+        // 缓存 shoppingListId（失败不影响跳转）
+        wx.cloud.callFunction({
+          name: 'updateMenuField',
+          data: {
+            menuId: this.data.menu._id,
+            field: 'shoppingListId',
+            value: addRes._id
+          }
+        }).then(res => {
+          if (res.result.success) {
+            this.setData({ 'menu.shoppingListId': addRes._id })
+          }
+        }).catch(err => console.error('缓存失败', err))
+  
+        wx.navigateTo({
+          url: `/pages/dish/shopping-list/shopping-list?id=${addRes._id}`
+        })
+      }).catch(err => {
+        console.error('保存购物清单失败', err)
         wx.showToast({ title: '保存失败', icon: 'none' })
-        return
-      }
-      // 4. 跳转到购物清单详情页
-      wx.navigateTo({
-        url: `/pages/dish/shopping-list/shopping-list?id=${res._id}`
       })
     }).catch(err => {
       wx.hideLoading()
-      console.error(err)
-      wx.showToast({ title: '生成失败', icon: 'none' })
+      console.error('生成购物清单失败', err)
+      wx.showToast({ title: '生成失败，请重试', icon: 'none' })
     })
   },
 
@@ -210,16 +231,13 @@ Page({
   
           wx.cloud.database().collection('tonightMenus').doc(menuId).update({
             data: {
-              dishes: newDishes
+              dishes: newDishes,
+              shoppingListId: null   // 菜单变了，清除购物清单缓存
             }
           }).then(() => {
             wx.hideLoading()
             wx.showToast({ title: '已删除' })
-            this.loadTonightMenu(menuId) // 刷新
-          }).catch(err => {
-            wx.hideLoading()
-            console.error(err)
-            wx.showToast({ title: '删除失败', icon: 'none' })
+            this.loadTonightMenu(menuId)   // 注意：原可能写成 loadMenu，确保为 loadTonightMenu
           })
         }
       }
@@ -232,8 +250,19 @@ Page({
       return
     }
   
-    wx.navigateTo({
-      url: `/pages/dish/cooking/cooking?menuId=${this.data.menu._id}`
+    // 删除旧的 sop 缓存，强制重新生成（只执行一次，后续会缓存新格式）
+    wx.cloud.callFunction({
+      name: 'updateMenuField',
+      data: { menuId: this.data.menu._id, field: 'sop', value: null }
+    }).then(() => {
+      wx.navigateTo({
+        url: `/pages/dish/cooking/cooking?menuId=${this.data.menu._id}`
+      })
+    }).catch(() => {
+      // 即使删除失败也跳转（可能是权限问题或字段不存在）
+      wx.navigateTo({
+        url: `/pages/dish/cooking/cooking?menuId=${this.data.menu._id}`
+      })
     })
   }
 })

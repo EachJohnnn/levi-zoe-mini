@@ -1,1 +1,221 @@
-/* pages/dish/cooking/cooking.wxss */
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  min-height: 100vh;
+  background: #FFF5F5;
+  padding: 24rpx 20rpx 40rpx;
+  box-sizing: border-box;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+}
+
+.loading-text {
+  font-size: 32rpx;
+  color: #FF6B6B;
+}
+
+/* 标签栏 */
+.tab-bar {
+  display: flex;
+  background: #fff;
+  border-radius: 50rpx;
+  padding: 8rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.1);
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 30rpx;
+  color: #999;
+  border-radius: 40rpx;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+}
+
+.tab-done {
+  position: absolute;
+  top: 8rpx;
+  right: 20rpx;
+  font-size: 20rpx;
+  background: #52c41a;
+  color: #fff;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 阶段内容 */
+.stage {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 107, 107, 0.08);
+}
+
+.stage-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #FF6B6B;
+  margin-bottom: 24rpx;
+}
+
+/* 步骤项 */
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.step-item:last-child {
+  border-bottom: none;
+}
+
+.checkbox {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  border: 2rpx solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  margin-top: 4rpx;
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: #fff;
+  transition: all 0.2s;
+}
+
+.checkbox.checked {
+  background: #FF6B6B;
+  border-color: #FF6B6B;
+}
+
+.step-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
+.step-text.done {
+  text-decoration: line-through;
+  color: #999;
+}
+
+/* 做菜顺序 */
+.cooking-order {
+  margin-bottom: 20rpx;
+}
+
+.order-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.order-tag {
+  font-size: 26rpx;
+  color: #FF6B6B;
+  background: #FFF0F0;
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
+}
+
+/* 做菜卡片 */
+.dish-cook-card {
+  background: #fafafa;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.dish-cook-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+/* 小贴士 */
+.tips-card {
+  background: #fffbeb;
+  border: 2rpx solid #ffe58f;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-top: 24rpx;
+}
+
+.tips-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #d97706;
+  margin-bottom: 12rpx;
+}
+
+.tips-content {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.7;
+}
+
+.step-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.step-info.done {
+  opacity: 0.5;
+}
+
+.step-info.done .step-name,
+.step-info.done .step-desc {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.step-name {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.step-desc {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 6rpx;
+  line-height: 1.5;
+}
+
+.step-dish-tag {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  background: #FFF0F0;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  margin-right: 12rpx;
+  font-weight: 500;
+}
