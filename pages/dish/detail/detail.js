@@ -56,22 +56,40 @@ Page({
 
   deleteDish() {
     const id = this.data.dish._id
+    console.log('【删除】准备删除菜品，_id:', id)
+  
+    if (!id) {
+      wx.showToast({ title: '菜品ID为空，无法删除', icon: 'none' })
+      return
+    }
+  
     wx.showLoading({ title: '删除中...' })
-
-    wx.cloud.database().collection('dishes').doc(id).update({
-      data: {
-        status: 'deleted'   // 软删除，保留数据
-      }
-    }).then(() => {
+  
+    wx.cloud.callFunction({
+      name: 'deleteDish',
+      data: { dishId: id }
+    }).then(res => {
       wx.hideLoading()
+      console.log('【删除】云函数返回:', res.result)
+  
+      if (!res.result.success) {
+        wx.showModal({ title: '删除失败', content: res.result.error, showCancel: false })
+        return
+      }
+  
       wx.showToast({ title: '已删除', icon: 'success' })
       setTimeout(() => {
+        const pages = getCurrentPages()
+        const prevPage = pages[pages.length - 2]
+        if (prevPage && prevPage.loadDishes) {
+          prevPage.loadDishes()
+        }
         wx.navigateBack()
       }, 1500)
     }).catch(err => {
       wx.hideLoading()
-      console.error(err)
-      wx.showToast({ title: '删除失败', icon: 'none' })
+      console.error('【删除】云函数调用失败:', err)
+      wx.showModal({ title: '删除失败', content: err.message, showCancel: false })
     })
   },
   
