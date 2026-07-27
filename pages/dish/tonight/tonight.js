@@ -244,25 +244,13 @@ Page({
     })
   },
 
-  startCooking() {
+    startCooking() {
     if (!this.data.menu || !this.data.menu._id) {
       wx.showToast({ title: '菜单数据错误', icon: 'none' })
       return
     }
-  
-    // 删除旧的 sop 缓存，强制重新生成（只执行一次，后续会缓存新格式）
-    wx.cloud.callFunction({
-      name: 'updateMenuField',
-      data: { menuId: this.data.menu._id, field: 'sop', value: null }
-    }).then(() => {
-      wx.navigateTo({
-        url: `/pages/dish/cooking/cooking?menuId=${this.data.menu._id}`
-      })
-    }).catch(() => {
-      // 即使删除失败也跳转（可能是权限问题或字段不存在）
-      wx.navigateTo({
-        url: `/pages/dish/cooking/cooking?menuId=${this.data.menu._id}`
-      })
+    wx.navigateTo({
+      url: `/pages/dish/cooking/cooking?menuId=${this.data.menu._id}`
     })
   }
 })

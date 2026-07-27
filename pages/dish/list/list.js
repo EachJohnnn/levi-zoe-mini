@@ -16,9 +16,10 @@ Page({
       wx.showToast({ title: '请先绑定情侣空间', icon: 'none' })
       return
     }
-
+  
     this.setData({ loading: true })
-
+    console.log('【列表】查询 coupleId:', coupleId)
+  
     wx.cloud.database().collection('dishes')
       .where({
         coupleId: coupleId,
@@ -27,13 +28,14 @@ Page({
       .orderBy('createTime', 'desc')
       .get()
       .then(res => {
+        console.log('【列表】第一条 status:', res.data[0]?.status, '_id:', res.data[0]?._id)
         this.setData({
           dishes: res.data,
           loading: false
         })
       })
       .catch(err => {
-        console.error(err)
+        console.error('【列表】查询失败:', err)
         this.setData({ loading: false })
         wx.showToast({ title: '加载失败', icon: 'none' })
       })
