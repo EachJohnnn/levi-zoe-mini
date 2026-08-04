@@ -1,0 +1,70 @@
+<view class="container">
+  <view class="header">
+    <view class="title">🧊 我的冰箱</view>
+    <view class="subtitle">记录现有食材，AI 帮你推荐菜单</view>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <text class="input-label">添加食材（支持批量输入）</text>
+    <textarea
+      class="input-field"
+      placeholder="例如：鸡蛋3个、番茄2个、牛肉200g、青椒1个"
+      placeholder-class="input-placeholder"
+      maxlength="-1"
+      auto-height
+      show-confirm-bar="{{false}}"
+      value="{{inputText}}"
+      bindinput="onInput"
+    />
+    <button class="add-btn" bindtap="addItems">➕ 添加食材</button>
+  </view>
+
+  <!-- 食材列表 -->
+  <view class="section-title">
+    <text>现有食材（{{items.length}}）</text>
+    <button class="clear-btn" wx:if="{{items.length > 0}}" bindtap="clearAll">清空</button>
+  </view>
+
+  <view class="item-list" wx:if="{{items.length > 0}}">
+    <view class="item-card" wx:for="{{items}}" wx:key="index" data-index="{{index}}">
+      <view class="item-info">
+        <view class="item-icon">🥘</view>
+        <view class="item-text-wrap">
+          <view class="item-name">{{item.name || item.ingredient || '未命名'}}</view>
+          <view class="item-amount">{{item.amount || item.quantity || ''}}</view>
+        </view>
+      </view>
+      <view class="item-actions">
+        <button class="action-btn edit" data-index="{{index}}" bindtap="editItem">编辑</button>
+        <button class="action-btn delete" data-index="{{index}}" bindtap="deleteItem">删除</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{items.length === 0}}">
+    <view class="empty-icon">🥗</view>
+    <view>冰箱空空如也~</view>
+    <view>在上方添加食材吧</view>
+  </view>
+
+  <!-- 底部推荐按钮 -->
+  <view class="bottom-bar">
+    <button class="recommend-btn {{items.length === 0 ? 'disabled' : ''}}" bindtap="goRecommend">
+      ✨ 根据冰箱推荐菜单
+    </button>
+  </view>
+
+  <!-- 编辑弹窗 -->
+  <view class="modal-mask" wx:if="{{showEditModal}}" bindtap="closeModal">
+    <view class="modal-content" catchtap="preventBubble">
+      <view class="modal-title">编辑食材</view>
+      <input class="modal-input" placeholder="食材名称" value="{{editName}}" bindinput="onEditName" />
+      <input class="modal-input" placeholder="数量" value="{{editAmount}}" bindinput="onEditAmount" />
+      <view class="modal-btns">
+        <button class="modal-btn cancel" bindtap="closeModal">取消</button>
+        <button class="modal-btn confirm" bindtap="confirmEdit">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

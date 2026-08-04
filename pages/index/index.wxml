@@ -69,6 +69,8 @@
 
     <button class="btn" bindtap="goTonightMenus">我的今晚菜单</button>
 
+    <button class="btn" bindtap="goFridge">🧊 我的冰箱</button>
+
     <button class="btn" bindtap="goShoppingList">🛒 查看购物清单</button>
     <!-- 仅测试用重置按钮 -->
     <button class="btn reset-btn" bindtap="resetCouple">重置情侣空间（仅测试用）</button>

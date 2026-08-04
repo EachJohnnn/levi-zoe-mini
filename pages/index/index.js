@@ -368,6 +368,12 @@ goTonightMenus() {
   })
 } ,
 
+goFridge() {
+  wx.navigateTo({
+    url: '/pages/fridge/fridge'
+  })
+},
+
 goShoppingList() {
   const coupleId = wx.getStorageSync('coupleId')
   if (!coupleId) {

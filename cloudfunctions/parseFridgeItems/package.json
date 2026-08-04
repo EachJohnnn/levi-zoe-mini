@@ -1,0 +1,20 @@
+{
+  "name": "parseFridgeItems",
+  "version": "1.0.0",
+  "description": "解析用户自由文本输入的冰箱食材，调用 DeepSeek AI 转为结构化数据",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cloudfunction",
+    "deepseek",
+    "fridge",
+    "ingredient-parser"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

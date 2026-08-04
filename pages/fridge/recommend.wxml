@@ -1,0 +1,75 @@
+<view class="container">
+  <view class="header">
+    <view class="title">✨ 为你推荐</view>
+    <view class="subtitle">基于冰箱食材，AI 智能推荐</view>
+  </view>
+
+  <!-- 当前食材 -->
+  <view class="fridge-tags" wx:if="{{fridgeItems.length > 0}}">
+    <text class="fridge-tag" wx:for="{{fridgeItems}}" wx:key="index">{{item.name}} {{item.amount}}</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-icon">🤖</view>
+    <view class="loading-text">AI 正在推荐菜品...</view>
+  </view>
+
+  <!-- 推荐列表 -->
+  <view wx:if="{{!loading && recommendations.length > 0}}">
+    <view class="recommend-card" wx:for="{{recommendations}}" wx:key="index">
+      <!-- 来源标签 -->
+      <view class="source-tag {{item.source === 'existing' ? 'existing' : 'new'}}">
+        {{item.source === 'existing' ? '📚 菜品库中' : '✨ AI新菜'}}
+      </view>
+
+      <!-- 匹配度星星 -->
+      <view class="match-score">
+        <text class="star {{item.matchScore >= 1 ? 'active' : ''}}">★</text>
+        <text class="star {{item.matchScore >= 2 ? 'active' : ''}}">★</text>
+        <text class="star {{item.matchScore >= 3 ? 'active' : ''}}">★</text>
+        <text class="star {{item.matchScore >= 4 ? 'active' : ''}}">★</text>
+        <text class="star {{item.matchScore >= 5 ? 'active' : ''}}">★</text>
+        <text class="score-text">{{item.matchScore}}星匹配</text>
+      </view>
+
+      <!-- 菜名 -->
+      <view class="dish-name">{{item.name}}</view>
+
+      <!-- 所需食材 -->
+      <view class="dish-ingredients">
+        <text class="label">所需食材：</text>
+        {{item.ingredients.join('、')}}
+      </view>
+
+      <!-- 缺失食材 -->
+      <view class="missing-ingredients" wx:if="{{item.missingIngredients && item.missingIngredients.length > 0 && item.missingIngredients.join('、')}}">
+        ⚠️ 还缺：{{item.missingIngredients.join('、')}}
+      </view>
+
+      <!-- 步骤预览 -->
+      <view class="steps-preview" wx:if="{{item.steps && item.steps.length > 0}}">
+        <view class="step-item" wx:for="{{item.steps}}" wx:for-item="step" wx:key="sIndex">
+          {{index + 1}}. {{step}}
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-btns">
+        <button class="action-btn primary" data-index="{{index}}" bindtap="addToMenu">
+          🍽️ 加入今晚菜单
+        </button>
+        <button class="action-btn secondary" wx:if="{{item.source === 'new'}}" data-index="{{index}}" bindtap="saveToLibrary">
+          💾 保存到菜品库
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && recommendations.length === 0}}">
+    <view class="empty-icon">🤷</view>
+    <view>暂无推荐</view>
+    <view>试着添加更多食材吧~</view>
+  </view>
+</view>
