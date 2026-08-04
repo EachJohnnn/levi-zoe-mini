@@ -1,0 +1,8 @@
+{
+  "name": "recommendFromFridge",
+  "version": "1.0.0",
+  "description": "根据冰箱现有食材，AI 生成 1-2 道新菜推荐",
+  "main": "index.js",
+  "author": "",
+  "license": "MIT"
+}

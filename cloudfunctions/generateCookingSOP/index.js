@@ -24,7 +24,7 @@ function httpsRequest(options, postData) {
 
 exports.main = async (event, context) => {
   const { dishes } = event
-  const apiKey = 'sk-511e8e058be6434fb09d6171b3af23d6'   // 替换成你自己的 key
+  const apiKey = process.env.DEEPSEEK_API_KEY 
 
   if (!dishes || dishes.length === 0) {
     return { success: false, error: '菜品列表不能为空' }

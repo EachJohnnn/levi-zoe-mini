@@ -8,7 +8,9 @@
     "pages/dish/tonight/tonight",
     "pages/dish/shopping-list/shopping-list",
     "pages/dish/shopping-list/history/history",
-    "pages/dish/cooking/cooking"
+    "pages/dish/cooking/cooking",
+    "pages/fridge/fridge",
+    "pages/fridge/recommend"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FFF5F5",
