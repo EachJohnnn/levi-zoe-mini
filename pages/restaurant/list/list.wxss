@@ -1,0 +1,249 @@
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  min-height: 100vh;
+  background: #FFF5F5;
+  padding: 24rpx 20rpx 160rpx;
+  box-sizing: border-box;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 40rpx;
+  padding: 16rpx 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(255, 107, 107, 0.08);
+}
+
+.search-icon {
+  font-size: 32rpx;
+  color: #999;
+  margin-right: 16rpx;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.search-placeholder {
+  color: #bbb;
+}
+
+/* 筛选标签 */
+.filter-tabs {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.filter-tab {
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  background: #fff;
+  color: #666;
+  border: 2rpx solid #eee;
+  transition: all 0.2s;
+}
+
+.filter-tab.active {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* 统计 */
+.count-bar {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+
+/* 餐厅卡片 */
+.restaurant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.restaurant-card {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 28rpx;
+  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
+  position: relative;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.restaurant-name {
+  font-size: 34rpx;
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.badge-group {
+  display: flex;
+  gap: 8rpx;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.badge {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+}
+
+.badge-want {
+  background: #FFF0F0;
+  color: #FF6B6B;
+}
+
+.badge-visited {
+  background: #E8F5E9;
+  color: #4CAF50;
+}
+
+/* 评分和人均 */
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 14rpx;
+}
+
+.stars {
+  display: flex;
+  gap: 4rpx;
+}
+
+.star {
+  font-size: 28rpx;
+  color: #FFB800;
+}
+
+.star.empty {
+  color: #ddd;
+}
+
+.rating-text {
+  font-size: 26rpx;
+  color: #FF6B6B;
+  font-weight: 500;
+}
+
+.price-tag {
+  font-size: 24rpx;
+  color: #999;
+  background: #f8f8f8;
+  padding: 4rpx 14rpx;
+  border-radius: 12rpx;
+}
+
+.distance-tag {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  background: #FFF0F0;
+  padding: 4rpx 14rpx;
+  border-radius: 12rpx;
+  margin-left: auto;
+}
+
+/* 菜系标签 */
+.cuisine-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+
+.cuisine-tag {
+  font-size: 22rpx;
+  color: #888;
+  background: #f5f5f5;
+  padding: 4rpx 14rpx;
+  border-radius: 12rpx;
+}
+
+/* 地址 */
+.address-row {
+  display: flex;
+  align-items: center;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.address-icon {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #bbb;
+}
+
+/* 添加按钮 */
+.add-btn {
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: 40rpx;
+  height: 90rpx;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.3);
+  z-index: 10;
+}
+
+/* 加载中 */
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 200rpx 40rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 20rpx;
+}

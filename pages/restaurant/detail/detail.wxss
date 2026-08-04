@@ -1,0 +1,367 @@
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  min-height: 100vh;
+  background: #FFF5F5;
+  padding: 24rpx 20rpx 40rpx;
+  box-sizing: border-box;
+}
+
+/* 信息卡片 */
+.info-card {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 32rpx 28rpx;
+  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
+  margin-bottom: 24rpx;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+
+.restaurant-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+}
+
+.badge-group {
+  display: flex;
+  gap: 8rpx;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.badge {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+}
+
+.badge-want {
+  background: #FFF0F0;
+  color: #FF6B6B;
+}
+
+.badge-visited {
+  background: #E8F5E9;
+  color: #4CAF50;
+}
+
+/* 评分人均 */
+.info-meta {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.stars {
+  display: flex;
+  gap: 4rpx;
+}
+
+.star {
+  font-size: 32rpx;
+  color: #FFB800;
+}
+
+.star.empty {
+  color: #ddd;
+}
+
+.rating-text {
+  font-size: 28rpx;
+  color: #FF6B6B;
+  font-weight: 500;
+}
+
+.price-tag {
+  font-size: 26rpx;
+  color: #999;
+  background: #f8f8f8;
+  padding: 4rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+/* 菜系 */
+.cuisine-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.cuisine-tag {
+  font-size: 24rpx;
+  color: #666;
+  background: #FFF0F0;
+  padding: 6rpx 18rpx;
+  border-radius: 20rpx;
+}
+
+/* 详情行 */
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 14rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  margin-right: 12rpx;
+  font-size: 28rpx;
+  flex-shrink: 0;
+}
+
+.info-label {
+  color: #999;
+  flex-shrink: 0;
+  margin-right: 12rpx;
+}
+
+.info-value {
+  color: #333;
+  flex: 1;
+  word-break: break-all;
+}
+
+/* 地址行 */
+.address-row {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.address-left {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.address-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 16rpx;
+  margin-left: 44rpx;
+}
+
+.action-mini-btn {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+}
+
+.nav-btn {
+  background: #E8F5E9;
+  color: #4CAF50;
+}
+
+.taxi-btn {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+
+/* 备注 */
+.note-section {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.note-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.note-content {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.8;
+  padding: 16rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+}
+
+/* 地图导航 */
+.map-nav-row {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.3);
+}
+
+.map-nav-row:active {
+  opacity: 0.9;
+}
+
+.map-nav-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.map-nav-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #fff;
+}
+
+.map-nav-arrow {
+  font-size: 24rpx;
+  color: #fff;
+  opacity: 0.7;
+}
+.action-bar {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+}
+
+.action-btn.secondary {
+  background: #fff;
+  color: #FF6B6B;
+  border: 2rpx solid #FF6B6B;
+}
+
+.action-btn.danger {
+  background: #f3f4f6;
+  color: #999;
+  border: 2rpx solid #ddd;
+}
+
+/* 打卡记录 */
+.visits-section {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 28rpx;
+  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
+}
+
+.visits-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.visits-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.visits-count {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 打卡卡片 */
+.visit-card {
+  border-bottom: 1rpx solid #f5f5f5;
+  padding: 20rpx 0;
+}
+
+.visit-card:last-child {
+  border-bottom: none;
+}
+
+.visit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.visit-date {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.visit-rating {
+  font-size: 26rpx;
+  color: #FFB800;
+}
+
+.visit-dishes {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+  margin-top: 12rpx;
+}
+
+.visit-price {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  margin-bottom: 16rpx;
+  padding: 8rpx 0;
+}
+
+.visit-note {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  padding: 12rpx 16rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  margin-top: 8rpx;
+}
+
+/* 空状态 */
+.empty-visits {
+  text-align: center;
+  padding: 60rpx 20rpx;
+}
+
+.empty-visits-text {
+  font-size: 28rpx;
+  color: #bbb;
+}
+
+/* 加载中 */
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 200rpx 40rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 20rpx;
+}

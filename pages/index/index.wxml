@@ -63,6 +63,12 @@
 
     <button class="btn primary" bindtap="addDish">添加新菜品（AI生成）</button>
 
+    <button class="btn" bindtap="goBlindbox">🎁 盲盒新菜</button>
+
+    <button class="btn" bindtap="goRestaurantList">🍽️ 餐厅探索</button>
+
+    <button class="btn" bindtap="goRestaurantMap">🗺️ 美食地图</button>
+
     <button class="btn" bindtap="goDishList">进入菜品库</button>
 
     <button class="btn" bindtap="goWantList">查看想吃池</button>

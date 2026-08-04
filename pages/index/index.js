@@ -290,6 +290,34 @@ addDish() {
   })
 },
 
+goBlindbox() {
+  wx.navigateTo({
+    url: '/pages/dish/blindbox/select/select'
+  })
+},
+
+goRestaurantList() {
+  const coupleId = wx.getStorageSync('coupleId')
+  if (!coupleId) {
+    wx.showToast({ title: '请先绑定情侣空间', icon: 'none' })
+    return
+  }
+  wx.navigateTo({
+    url: '/pages/restaurant/list/list'
+  })
+},
+
+goRestaurantMap() {
+  const coupleId = wx.getStorageSync('coupleId')
+  if (!coupleId) {
+    wx.showToast({ title: '请先绑定情侣空间', icon: 'none' })
+    return
+  }
+  wx.navigateTo({
+    url: '/pages/restaurant/map/map'
+  })
+},
+
 // 调用云函数生成菜谱（新版）
 generateDishWithAI(dishName) {
   const that = this

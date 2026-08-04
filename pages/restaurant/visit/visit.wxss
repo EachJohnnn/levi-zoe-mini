@@ -1,0 +1,130 @@
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  min-height: 100vh;
+  background: #FFF5F5;
+  padding: 24rpx 20rpx 160rpx;
+  box-sizing: border-box;
+}
+
+/* 餐厅名称提示 */
+.restaurant-hint {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 24rpx;
+  text-align: center;
+}
+
+.restaurant-hint .name {
+  color: #FF6B6B;
+  font-weight: 500;
+}
+
+/* 表单卡片 */
+.form-card {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 32rpx 28rpx;
+  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
+}
+
+.form-item {
+  margin-bottom: 28rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.form-input {
+  background: #f8f8f8;
+  border-radius: 12rpx;
+  padding: 18rpx 24rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.form-textarea {
+  background: #f8f8f8;
+  border-radius: 12rpx;
+  padding: 18rpx 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 160rpx;
+}
+
+/* 日期选择器行 */
+.date-picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f8f8;
+  border-radius: 12rpx;
+  padding: 18rpx 24rpx;
+}
+
+.date-value {
+  font-size: 28rpx;
+  color: #333;
+}
+.date-arrow {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 评分选择 */
+.star-selector {
+  display: flex;
+  gap: 16rpx;
+}
+
+.star-btn {
+  font-size: 48rpx;
+  color: #ddd;
+  transition: color 0.15s;
+}
+
+.star-btn.active {
+  color: #FFB800;
+}
+
+/* 提示文字 */
+.hint-text {
+  font-size: 24rpx;
+  color: #bbb;
+  margin-top: 8rpx;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: 40rpx;
+  height: 90rpx;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.3);
+  z-index: 10;
+}
+
+.submit-btn.disabled {
+  opacity: 0.6;
+}

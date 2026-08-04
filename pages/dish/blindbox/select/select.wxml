@@ -1,0 +1,62 @@
+<view class="container">
+  <view class="header">
+    <view class="title">🎁 盲盒新菜</view>
+    <view class="subtitle">选偏好，AI 为你推荐新菜</view>
+  </view>
+
+  <!-- 口味 -->
+  <view class="section">
+    <view class="section-title">口味偏好</view>
+    <view class="chip-group">
+      <view class="chip {{preferences.taste === item ? 'active' : ''}}" wx:for="{{tasteOptions}}" wx:key="*this" data-type="taste" data-value="{{item}}" bindtap="toggleChip">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 时间 -->
+  <view class="section">
+    <view class="section-title">烹饪时间</view>
+    <view class="chip-group">
+      <view class="chip {{preferences.time === item ? 'active' : ''}}" wx:for="{{timeOptions}}" wx:key="*this" data-type="time" data-value="{{item}}" bindtap="toggleChip">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 肉类 -->
+  <view class="section">
+    <view class="section-title">肉类选择</view>
+    <view class="chip-group">
+      <view class="chip {{preferences.meat === item ? 'active' : ''}}" wx:for="{{meatOptions}}" wx:key="*this" data-type="meat" data-value="{{item}}" bindtap="toggleChip">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 菜系 -->
+  <view class="section">
+    <view class="section-title">菜系偏好</view>
+    <view class="chip-group">
+      <view class="chip {{preferences.cuisine === item ? 'active' : ''}}" wx:for="{{cuisineOptions}}" wx:key="*this" data-type="cuisine" data-value="{{item}}" bindtap="toggleChip">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 自然语言补充 -->
+  <view class="section">
+    <view class="section-title">补充描述（可选）</view>
+    <view class="textarea-wrap">
+      <textarea
+        class="textarea"
+        placeholder="{{randomPlaceholder}}"
+        placeholder-class="textarea-placeholder"
+        maxlength="-1"
+        auto-height
+        show-confirm-bar="{{false}}"
+        value="{{freeText}}"
+        bindinput="onTextInput"
+      />
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <button class="generate-btn" bindtap="generateCandidates">
+      🎲 生成 3 道候选
+    </button>
+  </view>
+</view>

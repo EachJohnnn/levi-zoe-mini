@@ -10,7 +10,12 @@
     "pages/dish/shopping-list/history/history",
     "pages/dish/cooking/cooking",
     "pages/fridge/fridge",
-    "pages/fridge/recommend"
+    "pages/fridge/recommend",
+    "pages/restaurant/list/list",
+    "pages/restaurant/edit/edit",
+    "pages/restaurant/detail/detail",
+    "pages/restaurant/visit/visit",
+    "pages/restaurant/map/map"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FFF5F5",
@@ -18,6 +23,15 @@
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FFF5F5"
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于显示附近餐厅距离和地图定位"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
   "style": "v2",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"

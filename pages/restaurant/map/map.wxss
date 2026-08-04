@@ -1,0 +1,173 @@
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* 地图 */
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+/* 定位按钮 */
+.locate-btn {
+  position: absolute;
+  right: 30rpx;
+  bottom: 300rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.15);
+  font-size: 36rpx;
+  z-index: 10;
+}
+
+.locate-btn:active {
+  opacity: 0.8;
+}
+
+/* 底部餐厅信息卡片 */
+.restaurant-card {
+  position: absolute;
+  left: 20rpx;
+  right: 20rpx;
+  bottom: 40rpx;
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 28rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.12);
+  z-index: 10;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.restaurant-name {
+  font-size: 34rpx;
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.badge-group {
+  display: flex;
+  gap: 8rpx;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.badge {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+}
+
+.badge-want {
+  background: #FFF0F0;
+  color: #FF6B6B;
+}
+
+.badge-visited {
+  background: #E8F5E9;
+  color: #4CAF50;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.stars {
+  display: flex;
+  gap: 4rpx;
+}
+
+.star {
+  font-size: 28rpx;
+  color: #FFB800;
+}
+
+.star.empty {
+  color: #ddd;
+}
+
+.rating-text {
+  font-size: 26rpx;
+  color: #FF6B6B;
+}
+
+.price-tag {
+  font-size: 24rpx;
+  color: #999;
+  background: #f8f8f8;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.address-row {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+
+.address-icon {
+  margin-right: 8rpx;
+}
+
+/* 操作按钮 */
+.card-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 72rpx;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+}
+
+.action-btn.secondary {
+  background: #fff;
+  color: #FF6B6B;
+  border: 2rpx solid #FF6B6B;
+}
+
+/* 提示文字 */
+.hint-text {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  right: 20rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  background: rgba(255,255,255,0.9);
+  padding: 12rpx;
+  border-radius: 12rpx;
+}

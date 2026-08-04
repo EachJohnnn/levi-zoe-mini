@@ -1,0 +1,144 @@
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  min-height: 100vh;
+  background: #FFF5F5;
+  padding: 24rpx 20rpx 160rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #FF6B6B;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+/* 候选卡片 */
+.candidate-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 107, 107, 0.08);
+  position: relative;
+  border: 2rpx solid transparent;
+}
+
+.candidate-card.selected {
+  border-color: #FF6B6B;
+}
+
+.checkbox {
+  position: absolute;
+  top: 20rpx;
+  right: 24rpx;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  border: 2rpx solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #fff;
+  transition: all 0.2s;
+}
+
+.checkbox.checked {
+  background: #FF6B6B;
+  border-color: #FF6B6B;
+}
+
+.dish-name {
+  font-size: 34rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8rpx;
+  padding-right: 60rpx;
+}
+
+.dish-brief {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+  line-height: 1.5;
+}
+
+.dish-reason {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  background: #FFF0F0;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+  display: inline-block;
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #999;
+  font-size: 30rpx;
+}
+
+/* 底部 */
+.bottom-bar {
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: 40rpx;
+  z-index: 10;
+  background: #fff;
+  border-radius: 50rpx;
+  padding: 16rpx;
+  box-shadow: 0 8rpx 28rpx rgba(255, 107, 107, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.count-text {
+  font-size: 26rpx;
+  color: #666;
+  padding-left: 24rpx;
+}
+
+.count-text .num {
+  color: #FF6B6B;
+  font-weight: 500;
+}
+
+.generate-btn {
+  flex: 1;
+  height: 76rpx;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0;
+}
+
+.generate-btn::after {
+  border: none;
+}
+
+.generate-btn.disabled {
+  background: #ddd;
+}
