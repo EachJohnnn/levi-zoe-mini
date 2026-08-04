@@ -1,0 +1,7 @@
+{
+  "name": "searchRestaurants",
+  "version": "1.0.0",
+  "description": "搜索餐厅/商家",
+  "main": "index.js",
+  "dependencies": {}
+}

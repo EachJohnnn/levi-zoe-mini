@@ -1,0 +1,7 @@
+{
+  "name": "generateBlindboxCandidates",
+  "version": "1.0.0",
+  "description": "AI生成盲盒候选菜品云函数",
+  "main": "index.js",
+  "dependencies": {}
+}

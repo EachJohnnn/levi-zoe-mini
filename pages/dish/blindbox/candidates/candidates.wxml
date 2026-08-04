@@ -1,0 +1,25 @@
+<view class="container">
+  <view class="header">
+    <view class="title">🎲 候选菜品</view>
+    <view class="subtitle">勾选 1-3 道想做的菜</view>
+  </view>
+
+  <view class="candidate-card {{item.selected ? 'selected' : ''}}" wx:for="{{candidates}}" wx:key="index" data-index="{{index}}" bindtap="toggleSelect">
+    <view class="checkbox {{item.selected ? 'checked' : ''}}">{{item.selected ? '✓' : ''}}</view>
+    <view class="dish-name">{{item.name}}</view>
+    <view class="dish-brief">{{item.brief}}</view>
+    <view class="dish-reason">💡 {{item.reason}}</view>
+  </view>
+
+  <view class="empty" wx:if="{{candidates.length === 0}}">
+    暂无候选菜品
+  </view>
+
+  <!-- 底部 -->
+  <view class="bottom-bar">
+    <view class="count-text">已选 <text class="num">{{selectedCount}}</text> 道</view>
+    <button class="generate-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="generateDishes">
+      生成完整菜谱
+    </button>
+  </view>
+</view>

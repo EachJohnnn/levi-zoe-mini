@@ -1,0 +1,76 @@
+<view class="container">
+  <view class="restaurant-hint">
+    正在为 <text class="name">{{restaurantName}}</text> 记录就餐体验
+  </view>
+
+  <view class="form-card">
+    <!-- 日期 -->
+    <view class="form-item">
+      <text class="form-label">就餐日期</text>
+      <picker mode="date" value="{{form.visitDate}}" bindchange="onDateChange">
+        <view class="date-picker-row">
+          <text class="date-value">{{form.visitDate}}</text>
+          <text class="date-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 总消费 -->
+    <view class="form-item">
+      <text class="form-label">总消费（元）</text>
+      <input
+        class="form-input"
+        placeholder="如：268"
+        type="digit"
+        value="{{form.totalPrice}}"
+        bindinput="onPriceInput"
+      />
+    </view>
+
+    <!-- 评分 -->
+    <view class="form-item">
+      <text class="form-label">本次评分</text>
+      <view class="star-selector">
+        <text
+          wx:for="{{[1,2,3,4,5]}}"
+          wx:key="*this"
+          class="star-btn {{form.rating >= item ? 'active' : ''}}"
+          data-rating="{{item}}"
+          bindtap="setRating"
+        >★</text>
+      </view>
+      <text class="hint-text" wx:if="{{form.rating > 0}}">
+        {{['非常失望', '一般般', '还不错', '很好吃', '强烈推荐'][form.rating - 1]}}
+      </text>
+    </view>
+
+    <!-- 菜品 -->
+    <view class="form-item">
+      <text class="form-label">点的菜品</text>
+      <textarea
+        class="form-textarea"
+        placeholder="输入菜品名称，用逗号分隔，如：红烧肉，清蒸鱼，蒜蓉西兰花"
+        value="{{form.dishesText}}"
+        bindinput="onDishesInput"
+        maxlength="200"
+      />
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-item">
+      <text class="form-label">备注</text>
+      <textarea
+        class="form-textarea"
+        placeholder="有什么特别的体验或想记录的..."
+        value="{{form.note}}"
+        bindinput="onNoteInput"
+        maxlength="200"
+      />
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-btn {{saving ? 'disabled' : ''}}" bindtap="submitVisit">
+    <text>{{saving ? '保存中...' : '提交打卡'}}</text>
+  </view>
+</view>

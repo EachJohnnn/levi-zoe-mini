@@ -1,0 +1,9 @@
+{
+  "name": "generateBlindboxDishes",
+  "version": "1.0.0",
+  "description": "AI 批量生成盲盒菜谱云函数，基于 DeepSeek API",
+  "main": "index.js",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {}
+}

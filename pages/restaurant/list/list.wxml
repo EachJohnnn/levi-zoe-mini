@@ -1,0 +1,85 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <text class="search-icon">🔍</text>
+    <input
+      class="search-input"
+      placeholder="搜索餐厅名、地址、菜系"
+      placeholder-class="search-placeholder"
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+    />
+  </view>
+
+  <!-- 筛选标签 -->
+  <view class="filter-tabs">
+    <view
+      wx:for="{{filterTabs}}"
+      wx:key="key"
+      class="filter-tab {{activeFilter === item.key ? 'active' : ''}}"
+      data-filter="{{item.key}}"
+      bindtap="switchFilter"
+    >{{item.label}}</view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="count-bar" wx:if="{{!loading && filteredRestaurants.length > 0}}">
+    共 {{filteredRestaurants.length}} 家餐厅
+  </view>
+
+  <!-- 餐厅列表 -->
+  <view class="restaurant-list" wx:if="{{!loading && filteredRestaurants.length > 0}}">
+    <view
+      wx:for="{{filteredRestaurants}}"
+      wx:key="_id"
+      class="restaurant-card"
+      data-id="{{item._id}}"
+      bindtap="onRestaurantTap"
+    >
+      <view class="card-header">
+        <text class="restaurant-name">{{item.name}}</text>
+        <view class="badge-group">
+          <text wx:if="{{item.wantToGo}}" class="badge badge-want">想去</text>
+          <text wx:if="{{item.visited}}" class="badge badge-visited">已打卡</text>
+        </view>
+      </view>
+
+      <view class="card-meta">
+        <view class="stars" wx:if="{{item.rating}}">
+          <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="star" wx:key="*this" class="star {{item.rating >= star ? '' : 'empty'}}">★</text>
+        </view>
+        <text wx:if="{{item.rating}}" class="rating-text">{{item.rating}} 分</text>
+        <text wx:if="{{item.pricePerPerson}}" class="price-tag">¥{{item.pricePerPerson}}/人</text>
+        <text wx:if="{{item.distanceText}}" class="distance-tag">{{item.distanceText}}</text>
+      </view>
+
+      <view class="cuisine-tags" wx:if="{{item.cuisineTags && item.cuisineTags.length > 0}}">
+        <text wx:for="{{item.cuisineTags}}" wx:key="*this" class="cuisine-tag">{{item}}</text>
+      </view>
+
+      <view class="address-row" wx:if="{{item.address}}">
+        <text class="address-icon">📍</text>
+        <text>{{item.address}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && filteredRestaurants.length === 0}}">
+    <text class="empty-icon">🍽️</text>
+    <text class="empty-text">
+      {{activeFilter === 'all' ? '还没有记录任何餐厅' : (activeFilter === 'want' ? '还没有标记想去的餐厅' : '还没有打卡记录')}}
+    </text>
+    <text class="empty-hint">点击下方按钮添加第一家餐厅吧</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-btn" bindtap="goAddRestaurant">
+    <text>+ 添加餐厅</text>
+  </view>
+</view>

@@ -1,0 +1,162 @@
+<view class="container">
+  <view class="form-card">
+    <!-- 搜索商家（主要入口） -->
+    <view class="form-item">
+      <text class="form-label">🔍 搜索商家</text>
+      <input
+        class="form-input search-input"
+        placeholder="输入餐厅名搜索，如：海底捞"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <!-- 搜索结果 -->
+      <view class="search-results" wx:if="{{showSearchResults && searchResults.length > 0}}">
+        <view
+          wx:for="{{searchResults}}"
+          wx:key="id"
+          class="search-result-item"
+          data-item="{{item}}"
+          bindtap="selectResult"
+        >
+          <text class="result-title">{{item.title}}</text>
+          <text class="result-address">{{item.address}}</text>
+        </view>
+      </view>
+      <view class="search-loading" wx:if="{{searching}}">
+        <text>搜索中...</text>
+      </view>
+    </view>
+
+    <!-- 从地图选择 -->
+    <view class="form-item">
+      <view class="map-btn" bindtap="chooseFromMap">
+        <text class="map-icon">🗺️</text>
+        <text>从地图选择位置</text>
+      </view>
+    </view>
+
+    <!-- 已选择的信息摘要 -->
+    <view class="form-item selected-info" wx:if="{{form.name || form.address}}">
+      <view class="selected-row" wx:if="{{form.name}}">
+        <text class="selected-label">名称：</text>
+        <text class="selected-value">{{form.name}}</text>
+      </view>
+      <view class="selected-row" wx:if="{{form.address}}">
+        <text class="selected-label">地址：</text>
+        <text class="selected-value">{{form.address}}</text>
+      </view>
+      <view class="selected-row" wx:if="{{form.latitude && form.longitude}}">
+        <text class="selected-label">📍</text>
+        <text class="selected-value location-ok">已绑定精确位置</text>
+      </view>
+    </view>
+
+    <!-- 手动填写开关 -->
+    <view class="form-item">
+      <view class="manual-toggle" bindtap="toggleManual">
+        <text>{{showManual ? '收起手动填写 ▲' : '搜索不到？手动填写 ▼'}}</text>
+      </view>
+    </view>
+
+    <!-- 手动填写区域 -->
+    <view wx:if="{{showManual}}">
+      <!-- 餐厅名称 -->
+      <view class="form-item">
+        <text class="form-label">餐厅名称</text>
+        <input
+          class="form-input"
+          placeholder="如：海底捞火锅"
+          value="{{form.name}}"
+          bindinput="onNameInput"
+        />
+      </view>
+
+      <!-- 地址 -->
+      <view class="form-item">
+        <text class="form-label">地址</text>
+        <input
+          class="form-input"
+          placeholder="如：朝阳区三里屯太古里"
+          value="{{form.address}}"
+          bindinput="onAddressInput"
+        />
+      </view>
+
+      <!-- 电话 -->
+      <view class="form-item">
+        <text class="form-label">电话</text>
+        <input
+          class="form-input"
+          placeholder="如：010-12345678"
+          value="{{form.phone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+    </view>
+
+    <!-- 人均消费 -->
+    <view class="form-item">
+      <text class="form-label">人均消费（元）</text>
+      <input
+        class="form-input"
+        placeholder="如：120"
+        type="number"
+        value="{{form.pricePerPerson}}"
+        bindinput="onPriceInput"
+      />
+    </view>
+
+    <!-- 菜系标签 -->
+    <view class="form-item">
+      <text class="form-label">菜系标签</text>
+      <view class="cuisine-options">
+        <view
+          wx:for="{{cuisineOptions}}"
+          wx:key="*this"
+          class="cuisine-option {{selectedTagMap[item] ? 'selected' : ''}}"
+          data-tag="{{item}}"
+          bindtap="toggleCuisine"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 评分 -->
+    <view class="form-item">
+      <text class="form-label">评分</text>
+      <view class="star-selector">
+        <text
+          wx:for="{{[1,2,3,4,5]}}"
+          wx:key="*this"
+          class="star-btn {{form.rating >= item ? 'active' : ''}}"
+          data-rating="{{item}}"
+          bindtap="setRating"
+        >★</text>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-item">
+      <text class="form-label">备注</text>
+      <textarea
+        class="form-textarea"
+        placeholder="有什么特别的推荐菜或注意事项..."
+        value="{{form.note}}"
+        bindinput="onNoteInput"
+        maxlength="200"
+      />
+    </view>
+
+    <!-- 标记为想去 -->
+    <view class="form-item">
+      <view class="switch-wrap">
+        <text class="switch-label">标记为"想去"</text>
+        <switch checked="{{form.wantToGo}}" bindchange="toggleWantToGo" color="#FF6B6B"></switch>
+      </view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-btn {{saving ? 'disabled' : ''}}" bindtap="saveRestaurant">
+    <text>{{saving ? '保存中...' : (isEdit ? '保存修改' : '添加餐厅')}}</text>
+  </view>
+</view>

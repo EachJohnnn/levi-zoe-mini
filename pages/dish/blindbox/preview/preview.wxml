@@ -1,0 +1,42 @@
+<view class="container">
+  <view class="header">
+    <view class="title">📖 预览菜谱</view>
+    <view class="subtitle">确认后保存到菜品库</view>
+  </view>
+
+  <view wx:for="{{dishes}}" wx:key="index" wx:for-item="dish">
+    <view class="dish-card">
+      <view class="dish-header">
+        <view class="dish-title">{{dish.name}}</view>
+        <view class="dish-category">{{dish.category || '家常菜'}}</view>
+      </view>
+
+      <view class="section-label">食材</view>
+      <view class="ingredients-list">
+        <view class="ingredient-tag" wx:for="{{dish.ingredients}}" wx:key="i" wx:for-item="ing">{{ing}}</view>
+      </view>
+
+      <view class="section-label">步骤</view>
+      <view class="steps-list">
+        <view class="step-item" wx:for="{{dish.steps}}" wx:key="s" wx:for-item="step">
+          <view class="step-num">{{index + 1}}</view>
+          {{step}}
+        </view>
+      </view>
+
+      <view wx:if="{{dish.tips}}">
+        <view class="section-label">小贴士</view>
+        <view class="tips-box">{{dish.tips}}</view>
+      </view>
+    </view>
+
+    <view class="divider" wx:if="{{index < dishes.length - 1}}">• • •</view>
+  </view>
+
+  <!-- 底部 -->
+  <view class="bottom-bar">
+    <button class="save-btn" bindtap="saveAll">
+      💾 保存 {{dishes.length}} 道菜到菜品库
+    </button>
+  </view>
+</view>

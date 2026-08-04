@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 提示 -->
+  <view class="hint-text" wx:if="{{!loading && markers.length === 0}}">
+    还没有带位置的餐厅，快去添加吧
+  </view>
+
+  <!-- 地图 -->
+  <map
+    class="map"
+    id="map"
+    latitude="{{latitude}}"
+    longitude="{{longitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    bindmarkertap="onMarkerTap"
+    bindtap="onMapTap"
+    show-location
+  />
+
+  <!-- 定位按钮 -->
+  <view class="locate-btn" bindtap="locateCurrentPosition">
+    <text>📍</text>
+  </view>
+
+  <!-- 餐厅信息卡片 -->
+  <view class="restaurant-card" wx:if="{{selectedRestaurant}}">
+    <view class="card-header">
+      <text class="restaurant-name">{{selectedRestaurant.name}}</text>
+      <view class="badge-group">
+        <text wx:if="{{selectedRestaurant.wantToGo}}" class="badge badge-want">想去</text>
+        <text wx:if="{{selectedRestaurant.visited}}" class="badge badge-visited">已打卡</text>
+      </view>
+    </view>
+
+    <view class="card-meta">
+      <view class="stars" wx:if="{{selectedRestaurant.rating}}">
+        <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="star" wx:key="*this" class="star {{selectedRestaurant.rating >= star ? '' : 'empty'}}">★</text>
+      </view>
+      <text wx:if="{{selectedRestaurant.rating}}" class="rating-text">{{selectedRestaurant.rating}} 分</text>
+      <text wx:if="{{selectedRestaurant.pricePerPerson}}" class="price-tag">¥{{selectedRestaurant.pricePerPerson}}/人</text>
+    </view>
+
+    <view class="address-row" wx:if="{{selectedRestaurant.address}}">
+      <text class="address-icon">📍</text>
+      <text>{{selectedRestaurant.address}}</text>
+    </view>
+
+    <view class="card-actions">
+      <view class="action-btn primary" bindtap="goDetail">
+        <text>查看详情</text>
+      </view>
+    </view>
+  </view>
+</view>

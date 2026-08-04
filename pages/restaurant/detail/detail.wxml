@@ -1,0 +1,106 @@
+<view class="container">
+  <!-- 餐厅信息 -->
+  <view class="info-card" wx:if="{{!loading && restaurant}}">
+    <view class="info-header">
+      <text class="restaurant-name">{{restaurant.name}}</text>
+      <view class="badge-group">
+        <text wx:if="{{restaurant.wantToGo}}" class="badge badge-want">想去</text>
+        <text wx:if="{{restaurant.visited}}" class="badge badge-visited">已打卡</text>
+      </view>
+    </view>
+
+    <view class="info-meta">
+      <view class="stars" wx:if="{{restaurant.rating}}">
+        <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{restaurant.rating >= item ? '' : 'empty'}}">★</text>
+      </view>
+      <text wx:if="{{restaurant.rating}}" class="rating-text">{{restaurant.rating}} 分</text>
+      <text wx:if="{{restaurant.pricePerPerson}}" class="price-tag">¥{{restaurant.pricePerPerson}}/人</text>
+    </view>
+
+    <view class="cuisine-tags" wx:if="{{restaurant.cuisineTags && restaurant.cuisineTags.length > 0}}">
+      <text wx:for="{{restaurant.cuisineTags}}" wx:key="*this" class="cuisine-tag">{{item}}</text>
+    </view>
+
+    <view class="info-row address-row" wx:if="{{restaurant.address}}">
+      <view class="address-left">
+        <text class="info-icon">📍</text>
+        <text class="info-value">{{restaurant.address}}</text>
+      </view>
+      <view class="address-actions">
+        <view class="action-mini-btn nav-btn" bindtap="openMap">
+          <text>🧭</text>
+          <text>导航</text>
+        </view>
+        <view class="action-mini-btn taxi-btn" bindtap="openTaxi">
+          <text>🚕</text>
+          <text>打车</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="info-row" wx:if="{{restaurant.phone}}">
+      <text class="info-icon">📞</text>
+      <text class="info-value">{{restaurant.phone}}</text>
+    </view>
+
+    <view class="note-section" wx:if="{{restaurant.note}}">
+      <text class="note-label">备注</text>
+      <text class="note-content">{{restaurant.note}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-bar" wx:if="{{!loading && restaurant}}">
+    <view class="action-btn secondary" bindtap="toggleWantToGo">
+      <text>{{restaurant.wantToGo ? '取消想去' : '标记想去'}}</text>
+    </view>
+    <view class="action-btn primary" bindtap="goVisit">
+      <text>📝 去打卡</text>
+    </view>
+  </view>
+
+  <view class="action-bar" wx:if="{{!loading && restaurant}}">
+    <view class="action-btn secondary" bindtap="goEdit">
+      <text>✏️ 编辑信息</text>
+    </view>
+    <view class="action-btn danger" bindtap="deleteRestaurant">
+      <text>🗑️ 删除</text>
+    </view>
+  </view>
+
+  <!-- 打卡记录 -->
+  <view class="visits-section" wx:if="{{!loading && restaurant}}">
+    <view class="visits-header">
+      <text class="visits-title">打卡记录</text>
+      <text class="visits-count">共 {{visits.length}} 次</text>
+    </view>
+
+    <view wx:if="{{visits.length > 0}}">
+      <view wx:for="{{visits}}" wx:key="_id" class="visit-card">
+        <view class="visit-header">
+          <text class="visit-date">{{item.visitDate}}</text>
+          <view class="visit-rating">
+            <block wx:for="{{[1,2,3,4,5]}}" wx:for-item="star" wx:key="*this">
+              <text style="color: {{star <= (item.rating || 0) ? '#FFB800' : '#ddd'}}">★</text>
+            </block>
+            <text wx:if="{{!item.rating}}">未评分</text>
+          </view>
+        </view>
+        <text wx:if="{{item.dishes && item.dishes.length > 0}}" class="visit-dishes">
+          菜品：{{item.dishes.join('、')}}
+        </text>
+        <text wx:if="{{item.totalPrice}}" class="visit-price">消费：¥{{item.totalPrice}}</text>
+        <text wx:if="{{item.note}}" class="visit-note">{{item.note}}</text>
+      </view>
+    </view>
+
+    <view wx:else class="empty-visits">
+      <text class="empty-visits-text">还没有打卡记录，快去记录第一次吧～</text>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

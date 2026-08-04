@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "network": {
+      "allowedDomains": ["apis.map.qq.com"]
+    }
+  }
+}
