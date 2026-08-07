@@ -6,6 +6,7 @@
   <view class="container">
     <view class="title">Levi & Zoe</view>
     <view class="subtitle">我们的小厨房</view>
+    <view class="desc">记录美食 · 探索餐厅 · 共享菜谱</view>
     <button class="login-btn" bindtap="onGetUserInfo">微信一键登录</button>
   </view>
 </block>
@@ -18,20 +19,16 @@
       <view class="nickname">{{userInfo.nickName}}</view>
     </view>
 
-    <!-- 显示 openid（方便调试） -->
     <view wx:if="{{userInfo.openid}}" class="openid-box">
       OpenID: {{userInfo.openid}}
     </view>
 
-    <view class="tip">还没有加入情侣空间哦</view>
+    <view class="tip">Hi {{userInfo.nickName}}，开启你们的小厨房吧</view>
 
-    <!-- 创建按钮 -->
     <button class="btn primary" bindtap="createCouple">创建情侣空间</button>
-    
-    <!-- 加入按钮 -->
     <button class="btn" bindtap="joinCouple">输入邀请码加入</button>
+    <button class="btn text" bindtap="recoverCouple">找回我的情侣空间</button>
 
-    <!-- 如果之前创建过，显示邀请码 -->
     <block wx:if="{{inviteCode}}">
       <view class="invite-box">
         邀请码：{{inviteCode}}
@@ -41,44 +38,9 @@
   </view>
 </block>
 
-<!-- 已绑定情侣空间 -->
+<!-- 已绑定情侣空间 —— 自动跳转，这里一般看不到 -->
 <block wx:else>
   <view class="container">
-    <view class="title">欢迎回来</view>
-    <view class="subtitle">{{userInfo.nickName}}</view>
-    
-    <view wx:if="{{userInfo.openid}}" class="openid-box">
-      OpenID: {{userInfo.openid}}
-    </view>
-    
-    <view class="tip">情侣空间已绑定 ✓</view>
-    <button class="btn" bindtap="showMembers">查看情侣空间成员</button>
-    <!-- 新增：创建成功后显示邀请码 -->
-    <block wx:if="{{inviteCode}}">
-      <view class="invite-box">
-        邀请码：{{inviteCode}}
-        <view class="tip-small">请把邀请码发给对方，让对方加入</view>
-      </view>
-    </block>
-
-    <button class="btn primary" bindtap="addDish">添加新菜品（AI生成）</button>
-
-    <button class="btn" bindtap="goBlindbox">🎁 盲盒新菜</button>
-
-    <button class="btn" bindtap="goRestaurantList">🍽️ 餐厅探索</button>
-
-    <button class="btn" bindtap="goRestaurantMap">🗺️ 美食地图</button>
-
-    <button class="btn" bindtap="goDishList">进入菜品库</button>
-
-    <button class="btn" bindtap="goWantList">查看想吃池</button>
-
-    <button class="btn" bindtap="goTonightMenus">我的今晚菜单</button>
-
-    <button class="btn" bindtap="goFridge">🧊 我的冰箱</button>
-
-    <button class="btn" bindtap="goShoppingList">🛒 查看购物清单</button>
-    <!-- 仅测试用重置按钮 -->
-    <button class="btn reset-btn" bindtap="resetCouple">重置情侣空间（仅测试用）</button>
+    <view class="loading">正在进入...</view>
   </view>
 </block>

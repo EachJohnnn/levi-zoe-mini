@@ -42,6 +42,14 @@ page {
   box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dish-main {
+  flex: 1;
+  min-width: 0;
 }
 
 .dish-name {
@@ -58,6 +66,30 @@ page {
   display: inline-block;
   padding: 6rpx 16rpx;
   border-radius: 20rpx;
+}
+
+.adder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20rpx;
+}
+
+.adder-avatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #eee;
+  margin-bottom: 6rpx;
+}
+
+.adder-name {
+  font-size: 22rpx;
+  color: #999;
+  max-width: 120rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .add-btn {

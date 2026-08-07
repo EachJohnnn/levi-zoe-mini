@@ -1,0 +1,14 @@
+{
+  "name": "toggleDishWant",
+  "version": "1.0.0",
+  "description": "切换菜品想去状态",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~4.0.2"
+  }
+}

@@ -7,16 +7,42 @@ Page({
     date: '',
     dishes: [],
     items: [],
-    condiments: []
+    condiments: [],
+    isAuthorized: false
   },
 
   onLoad(options) {
-    const listId = options.id
+    let listId = options.id
+    const coupleId = wx.getStorageSync('coupleId')
+
     if (!listId) {
-      wx.showToast({ title: '参数错误', icon: 'none' })
+      // 没有传入 id，查询最新的购物清单
+      if (!coupleId) {
+        wx.showToast({ title: '请先绑定情侣空间', icon: 'none' })
+        return
+      }
+      wx.cloud.database().collection('shoppingLists')
+        .where({ coupleId })
+        .orderBy('createTime', 'desc')
+        .limit(1)
+        .get()
+        .then(res => {
+          if (res.data.length > 0) {
+            listId = res.data[0]._id
+            this.setData({ listId, coupleId })
+            this.loadList(listId)
+            this.startWatcher(listId)
+          } else {
+            wx.showToast({ title: '还没有购物清单', icon: 'none' })
+          }
+        })
+        .catch(() => {
+          wx.showToast({ title: '加载失败', icon: 'none' })
+        })
       return
     }
-    this.setData({ listId, coupleId: wx.getStorageSync('coupleId') })
+
+    this.setData({ listId, coupleId })
     this.loadList(listId)
     this.startWatcher(listId)
   },
@@ -31,14 +57,22 @@ Page({
   },
 
   loadList(id) {
+    const currentCoupleId = this.data.coupleId
     wx.cloud.database().collection('shoppingLists').doc(id).get()
       .then(res => {
         const data = res.data
+        if (!data || data.coupleId !== currentCoupleId) {
+          wx.showToast({ title: '无权限查看该购物清单', icon: 'none' })
+          this.setData({ isAuthorized: false })
+          setTimeout(() => wx.navigateBack(), 1500)
+          return
+        }
         this.setData({
           date: this.formatDate(data.date),
           dishes: data.dishes || [],
           items: data.items || [],
-          condiments: data.condiments || []
+          condiments: data.condiments || [],
+          isAuthorized: true
         })
       })
       .catch(err => {
@@ -76,6 +110,12 @@ Page({
   },
 
   toggleItem(e) {
+    const { isAuthorized } = this.data
+    if (!isAuthorized) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
+
     const { index, type } = e.currentTarget.dataset
     const field = type === 'item' ? 'items' : 'condiments'
     const list = this.data[field]

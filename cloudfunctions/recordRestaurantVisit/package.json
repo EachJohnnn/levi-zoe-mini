@@ -1,0 +1,14 @@
+{
+  "name": "recordRestaurantVisit",
+  "version": "1.0.0",
+  "description": "记录餐厅打卡并更新餐厅状态",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~4.0.2"
+  }
+}

@@ -1,6 +1,9 @@
 {
   "pages": [
+    "pages/home/home",
     "pages/index/index",
+    "pages/cook/cook",
+    "pages/profile/profile",
     "pages/dish/edit",
     "pages/dish/list/list",
     "pages/dish/detail/detail",
@@ -11,6 +14,9 @@
     "pages/dish/cooking/cooking",
     "pages/fridge/fridge",
     "pages/fridge/recommend",
+    "pages/dish/blindbox/select/select",
+    "pages/dish/blindbox/candidates/candidates",
+    "pages/dish/blindbox/preview/preview",
     "pages/restaurant/list/list",
     "pages/restaurant/edit/edit",
     "pages/restaurant/detail/detail",
@@ -22,6 +28,38 @@
     "navigationBarTitleText": "Levi & Zoe",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FFF5F5"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#FF6B6B",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "今日",
+        "iconPath": "images/tab-home.png",
+        "selectedIconPath": "images/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/cook/cook",
+        "text": "做菜",
+        "iconPath": "images/tab-cook.png",
+        "selectedIconPath": "images/tab-cook-active.png"
+      },
+      {
+        "pagePath": "pages/restaurant/list/list",
+        "text": "餐厅",
+        "iconPath": "images/tab-restaurant.png",
+        "selectedIconPath": "images/tab-restaurant-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab-profile.png",
+        "selectedIconPath": "images/tab-profile-active.png"
+      }
+    ]
   },
   "permission": {
     "scope.userLocation": {

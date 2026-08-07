@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="header">
+    <text class="header-title">🍳 小厨房</text>
+    <text class="header-subtitle">记录菜谱、规划菜单、探索新菜</text>
+  </view>
+
+  <view class="add-btn" bindtap="goAddDish">
+    <text>+ AI 生成新菜品</text>
+  </view>
+
+  <view class="feature-grid">
+    <view
+      wx:for="{{features}}"
+      wx:key="label"
+      class="feature-item"
+      data-url="{{item.url}}"
+      bindtap="onFeatureTap"
+    >
+      <text class="feature-icon">{{item.icon}}</text>
+      <text class="feature-label">{{item.label}}</text>
+    </view>
+  </view>
+</view>

@@ -71,7 +71,7 @@ exports.main = async (event, context) => {
 3. category 尽量从以下选择：家常菜、湘菜、川菜、粤菜、主食、汤品、甜品、早餐、其他。`
 
   const requestBody = JSON.stringify({
-    model: 'deepseek-v4-flash',
+    model: 'deepseek-chat',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: `菜名：${dishName}。请生成实用、详细的家常菜菜谱。` }

@@ -1,6 +1,7 @@
 Page({
   data: {
-    dishes: []
+    dishes: [],
+    saving: false
   },
 
   onLoad(options) {
@@ -19,10 +20,21 @@ Page({
   },
 
   saveAll() {
+    if (this.data.saving) {
+      wx.showToast({ title: '正在保存中...', icon: 'none' })
+      return
+    }
+
     const coupleId = wx.getStorageSync('coupleId')
     const userInfo = wx.getStorageSync('userInfo')
     const dishes = this.data.dishes
 
+    if (!coupleId) {
+      wx.showToast({ title: '请先绑定情侣空间', icon: 'none' })
+      return
+    }
+
+    this.setData({ saving: true })
     wx.showLoading({ title: `保存 0/${dishes.length} 道...` })
 
     let saved = 0
@@ -57,6 +69,7 @@ Page({
     Promise.all(promises)
       .then(() => {
         wx.hideLoading()
+        this.setData({ saving: false })
         wx.showModal({
           title: '保存成功',
           content: `已保存 ${dishes.length} 道菜到菜品库`,
@@ -68,12 +81,12 @@ Page({
                 url: '/pages/dish/list/list'
               })
             }
-            // 点击"确认"关闭弹窗，留在当前页
           }
         })
       })
       .catch(err => {
         wx.hideLoading()
+        this.setData({ saving: false })
         console.error(err)
         wx.showToast({ title: '保存失败', icon: 'none' })
       })

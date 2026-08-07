@@ -9,10 +9,14 @@ Page({
     prepProgress: 0,
     cookingProgress: 0,
     loading: true,
-    errorMsg: ''            // 错误信息
+    errorMsg: '',            // 错误信息
+    coupleId: '',
+    hasLoaded: false
   },
 
   onLoad(options) {
+    const coupleId = wx.getStorageSync('coupleId')
+    this.setData({ coupleId })
     const menuId = options.menuId
     if (!menuId) {
       this.setData({ loading: false, errorMsg: '参数错误' })
@@ -21,33 +25,44 @@ Page({
     this.loadMenu(menuId)
   },
 
-  // 从其他页面返回时刷新
+  // 从其他页面返回时刷新，但避免重复加载覆盖进度
   onShow() {
-    if (this.data.menu && this.data.menu._id) {
-      this.loadMenu(this.data.menu._id)
+    const { menu, hasLoaded } = this.data
+    if (hasLoaded && menu && menu._id) {
+      return
+    }
+    if (menu && menu._id) {
+      this.loadMenu(menu._id)
     }
   },
 
   loadMenu(menuId) {
+    const coupleId = this.data.coupleId
     const db = wx.cloud.database()
     db.collection('tonightMenus').doc(menuId).get()
       .then(res => {
         const menu = res.data
-        this.setData({ menu })
-  
+        if (!menu || menu.coupleId !== coupleId) {
+          this.setData({ loading: false, errorMsg: '无权限查看该菜单', hasLoaded: true })
+          return
+        }
+        this.setData({ menu, hasLoaded: true })
+
         // 使用缓存的 sop（云函数已确保格式统一）
         if (menu.sop && Array.isArray(menu.sop.prep) && Array.isArray(menu.sop.cook) && menu.sop.cook.length > 0) {
           this.setData({ sop: menu.sop, loading: false })
           this.loadDishes(menu.dishes, false)
+          this.calcPrepProgress()
+          this.calcCookProgress()
           return
         }
-  
+
         // 没有缓存或无效，加载菜品后调 AI
         this.loadDishes(menu.dishes, true)
       })
       .catch(err => {
         console.error('加载菜单失败', err)
-        this.setData({ loading: false, errorMsg: '加载菜单失败' })
+        this.setData({ loading: false, errorMsg: '加载菜单失败', hasLoaded: true })
       })
   },
 
@@ -107,7 +122,9 @@ Page({
       }
   
       this.setData({ sop, loading: false })
-  
+      this.calcPrepProgress()
+      this.calcCookProgress()
+
       // 缓存到数据库
       wx.cloud.callFunction({
         name: 'updateMenuField',
@@ -121,6 +138,15 @@ Page({
 
   switchTab(e) {
     this.setData({ currentStage: e.currentTarget.dataset.stage })
+  },
+
+  // 切换备菜步骤完成状态
+  togglePrepStep(e) {
+    const index = e.currentTarget.dataset.index
+    const key = `completedPrep.${index}`
+    const newVal = !this.data.completedPrep[index]
+    this.setData({ [key]: newVal })
+    this.calcPrepProgress()
   },
 
   // 切换烹饪步骤完成状态

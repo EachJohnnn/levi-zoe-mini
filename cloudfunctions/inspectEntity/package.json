@@ -1,0 +1,14 @@
+{
+  "name": "inspectEntity",
+  "version": "1.0.0",
+  "description": "按名称查询菜品或餐厅原始记录",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~4.0.2"
+  }
+}

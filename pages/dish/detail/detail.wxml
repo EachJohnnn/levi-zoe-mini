@@ -39,7 +39,7 @@
   <view class="btn-group">
     <button class="btn primary" bindtap="goEdit">编辑菜谱</button>
     <button class="btn danger" bindtap="onDelete">删除这道菜</button>
-    <button class="btn" bindtap="addToWantList">加入想吃池</button>
+    <button class="btn" bindtap="addToWantList">加入美食通缉榜</button>
   </view>
 
 </view>

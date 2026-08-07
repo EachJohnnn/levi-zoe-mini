@@ -37,6 +37,15 @@ page {
   border-radius: 20rpx;
   padding: 28rpx;
   box-shadow: 0 4rpx 20rpx rgba(255, 107, 107, 0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.dish-main {
+  flex: 1;
+  min-width: 0;
 }
 
 .dish-name {
@@ -56,7 +65,42 @@ page {
   margin-bottom: 20rpx;
 }
 
+.chef-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 16rpx;
+  min-width: 96rpx;
+}
+
+.chef-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #eee;
+  margin-bottom: 6rpx;
+}
+
+.chef-name {
+  font-size: 22rpx;
+  color: #666;
+  max-width: 120rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chef-placeholder {
+  font-size: 22rpx;
+  color: #FF6B6B;
+  background: #FFF0F0;
+  padding: 10rpx 16rpx;
+  border-radius: 24rpx;
+  white-space: nowrap;
+}
+
 .comment-btn {
+  width: 100%;
   margin-top: 16rpx;
   background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
   color: #fff;
@@ -76,6 +120,7 @@ page {
 }
 
 .comments {
+  width: 100%;
   margin-top: 16rpx;
 }
 

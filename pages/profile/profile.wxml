@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 用户信息 -->
+  <view class="user-card">
+    <view class="avatar-wrap" bindtap="uploadAvatar">
+      <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+      <view class="avatar-overlay">📷</view>
+    </view>
+    <view class="user-info">
+      <text class="user-name">{{userInfo.nickName}}</text>
+      <text class="user-id">{{userInfo.openid ? 'ID: ' + userInfo.openid.substring(0, 8) + '...' : ''}}</text>
+    </view>
+    <view class="edit-btn" bindtap="editNickname">修改昵称</view>
+  </view>
+
+  <!-- 情侣空间 -->
+  <view wx:if="{{coupleId}}">
+    <view class="couple-card">
+      <view class="section-header">
+        <text class="section-title">💕 情侣空间</text>
+        <text wx:if="{{isCreator}}" class="section-action">你是创建者</text>
+      </view>
+
+      <view class="couple-name-row" bindtap="editCoupleName">
+        <text class="couple-name">{{coupleName}}</text>
+        <text wx:if="{{isCreator}}" class="edit-icon">✏️</text>
+      </view>
+
+      <view class="member-list">
+        <view wx:for="{{coupleMembers}}" wx:key="*this" class="member-item">
+          <view class="member-avatar">{{item.substring(0, 1).toUpperCase()}}</view>
+          <text class="member-name">{{item === userInfo.openid ? '我' : 'TA'}}</text>
+          <text wx:if="{{item === userInfo.openid}}" class="member-tag">本人</text>
+          <text wx:if="{{isCreator && item !== userInfo.openid}}" class="kick-btn" data-openid="{{item}}" bindtap="kickMember">移除</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="danger-section">
+      <view class="danger-btn" bindtap="exitCouple">
+        {{isCreator ? '解散情侣空间' : '退出情侣空间'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 未绑定情侣空间 -->
+  <view wx:else class="unbind-card">
+    <text class="unbind-text">还没有加入情侣空间</text>
+    <view class="bind-btn" bindtap="goLogin">去绑定</view>
+  </view>
+
+  <view class="logout-section">
+    <view class="logout-btn" bindtap="logout">退出登录</view>
+  </view>
+</view>

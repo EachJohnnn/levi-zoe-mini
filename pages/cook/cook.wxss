@@ -1,0 +1,80 @@
+page {
+  background: #FFF5F5;
+}
+
+.container {
+  min-height: 100vh;
+  background: #FFF5F5;
+  padding: 24rpx 20rpx 40rpx;
+  box-sizing: border-box;
+}
+
+/* 头部 */
+.header {
+  margin-bottom: 32rpx;
+}
+
+.header-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: #999;
+  display: block;
+  margin-top: 8rpx;
+}
+
+/* 添加按钮 */
+.add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #fff;
+  border-radius: 50rpx;
+  height: 90rpx;
+  font-size: 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.3);
+}
+
+.add-btn:active {
+  opacity: 0.9;
+}
+
+/* 功能网格 */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.feature-item {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 36rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.08);
+}
+
+.feature-item:active {
+  opacity: 0.8;
+}
+
+.feature-icon {
+  font-size: 52rpx;
+  margin-bottom: 14rpx;
+}
+
+.feature-label {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+}

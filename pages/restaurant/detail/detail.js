@@ -4,10 +4,14 @@ Page({
   data: {
     restaurant: null,
     visits: [],
-    loading: true
+    loading: true,
+    currentCoupleId: '',
+    isAuthorized: false
   },
 
   onLoad(options) {
+    const currentCoupleId = wx.getStorageSync('coupleId')
+    this.setData({ currentCoupleId })
     if (options.id) {
       this.setData({ restaurantId: options.id })
       this.loadRestaurant(options.id)
@@ -24,12 +28,23 @@ Page({
   },
 
   loadRestaurant(id) {
+    const currentCoupleId = this.data.currentCoupleId
     this.setData({ loading: true })
+    console.log('【餐厅详情】加载餐厅，id:', id, 'currentCoupleId:', currentCoupleId)
     wx.cloud.database().collection('restaurants').doc(id).get()
       .then(res => {
+        const restaurant = res.data
+        console.log('【餐厅详情】加载结果:', restaurant)
+        if (!restaurant || restaurant.coupleId !== currentCoupleId) {
+          wx.showToast({ title: '无权限查看该餐厅', icon: 'none' })
+          this.setData({ loading: false, isAuthorized: false })
+          setTimeout(() => wx.navigateBack(), 1500)
+          return
+        }
         this.setData({
-          restaurant: res.data,
-          loading: false
+          restaurant,
+          loading: false,
+          isAuthorized: true
         })
       })
       .catch(err => {
@@ -54,17 +69,29 @@ Page({
 
   // 标记/取消想去
   toggleWantToGo() {
-    const { restaurant } = this.data
+    const { restaurant, isAuthorized } = this.data
+    if (!isAuthorized || !restaurant) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
     const newValue = !restaurant.wantToGo
-    wx.cloud.database().collection('restaurants').doc(restaurant._id).update({
-      data: { wantToGo: newValue }
-    }).then(() => {
+    wx.showLoading({ title: '更新中...' })
+    wx.cloud.callFunction({
+      name: 'toggleRestaurantWant',
+      data: { restaurantId: restaurant._id, wantToGo: newValue }
+    }).then(res => {
+      wx.hideLoading()
+      if (!res.result.success) {
+        wx.showToast({ title: res.result.error || '操作失败', icon: 'none' })
+        return
+      }
       this.setData({ 'restaurant.wantToGo': newValue })
       wx.showToast({
         title: newValue ? '已标记为想去' : '已取消想去',
         icon: 'none'
       })
     }).catch(err => {
+      wx.hideLoading()
       console.error(err)
       wx.showToast({ title: '操作失败', icon: 'none' })
     })
@@ -72,7 +99,11 @@ Page({
 
   // 去打卡
   goVisit() {
-    const { restaurant } = this.data
+    const { restaurant, isAuthorized } = this.data
+    if (!isAuthorized || !restaurant) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
     wx.navigateTo({
       url: `/pages/restaurant/visit/visit?restaurantId=${restaurant._id}&name=${encodeURIComponent(restaurant.name)}`
     })
@@ -80,7 +111,11 @@ Page({
 
   // 编辑
   goEdit() {
-    const { restaurant } = this.data
+    const { restaurant, isAuthorized } = this.data
+    if (!isAuthorized || !restaurant) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
     wx.navigateTo({
       url: `/pages/restaurant/edit/edit?id=${restaurant._id}`
     })
@@ -119,7 +154,11 @@ Page({
 
   // 删除
   deleteRestaurant() {
-    const { restaurant } = this.data
+    const { restaurant, isAuthorized } = this.data
+    if (!isAuthorized || !restaurant) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
     wx.showModal({
       title: '确认删除',
       content: `确定要删除"${restaurant.name}"吗？打卡记录也会被删除。`,
