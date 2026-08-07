@@ -9,8 +9,21 @@
 
     <view class="list" wx:if="{{dishes.length > 0}}">
       <view class="dish-item" wx:for="{{dishes}}" wx:for-item="dish" wx:key="_id">
-        <view class="dish-name">{{dish.name}}</view>
-        <view class="dish-category">{{dish.category || '未分类'}}</view>
+        <view class="dish-main">
+          <view class="dish-name">{{dish.name}}</view>
+          <view class="dish-category">{{dish.category || '未分类'}}</view>
+        </view>
+
+        <view class="chef-wrap" data-id="{{dish._id}}" bindtap="assignChef">
+          <block wx:if="{{menu.dishChefs && menu.dishChefs[dish._id] && memberMap[menu.dishChefs[dish._id]]}}">
+            <image class="chef-avatar" src="{{memberMap[menu.dishChefs[dish._id]].avatarUrl}}" mode="aspectFill" />
+            <text class="chef-name">{{memberMap[menu.dishChefs[dish._id]].nickName}}</text>
+          </block>
+          <block wx:else>
+            <view class="chef-placeholder">+ 指定厨师</view>
+          </block>
+        </view>
+
         <button class="comment-btn" data-id="{{dish._id}}" bindtap="addComment">评论</button>
 
         <view class="comments" wx:if="{{menu.comments && menu.comments.length > 0}}">

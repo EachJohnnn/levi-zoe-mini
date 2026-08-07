@@ -11,14 +11,31 @@ Page({
       setTimeout(() => wx.navigateBack(), 1500)
       return
     }
+    this.dishId = id
     this.loadDish(id)
   },
 
+  onShow() {
+    if (this.dishId) {
+      this.loadDish(this.dishId)
+    }
+  },
+
   loadDish(id) {
+    const coupleId = wx.getStorageSync('coupleId')
+    console.log('【菜品详情】加载菜品，id:', id, 'coupleId:', coupleId)
     wx.cloud.database().collection('dishes').doc(id).get()
       .then(res => {
+        const dish = res.data
+        console.log('【菜品详情】加载结果:', dish)
+        if (!dish || dish.coupleId !== coupleId) {
+          wx.showToast({ title: '无权限查看该菜品', icon: 'none' })
+          this.setData({ loading: false })
+          setTimeout(() => wx.navigateBack(), 1500)
+          return
+        }
         this.setData({
-          dish: res.data,
+          dish: dish,
           loading: false
         })
       })
@@ -95,30 +112,41 @@ Page({
   
   addToWantList() {
     const dish = this.data.dish
+    const userInfo = wx.getStorageSync('userInfo')
     if (!dish || !dish._id) {
       wx.showToast({ title: '菜品数据错误', icon: 'none' })
       return
     }
-  
+
     wx.showLoading({ title: '加入中...' })
-  
-    wx.cloud.database().collection('dishes').doc(dish._id).update({
+
+    wx.cloud.callFunction({
+      name: 'toggleDishWant',
       data: {
+        dishId: dish._id,
         inWantPool: true,
-        wantPoolTime: new Date()
+        nickName: userInfo?.nickName || '',
+        avatarUrl: userInfo?.avatarUrl || ''
       }
-    }).then(() => {
+    }).then(res => {
       wx.hideLoading()
-      wx.showToast({ title: '已加入想吃池', icon: 'success' })
-      
+
+      if (!res.result || !res.result.success) {
+        const errorMsg = (res.result && res.result.error) || '加入失败'
+        wx.showToast({ title: errorMsg, icon: 'none' })
+        return
+      }
+
+      wx.showToast({ title: '已加入美食通缉榜', icon: 'success' })
+
       // 更新本地数据
       this.setData({
         'dish.inWantPool': true
       })
     }).catch(err => {
       wx.hideLoading()
-      console.error('加入想吃池失败', err)
-      wx.showToast({ title: '加入失败，请重试', icon: 'none' })
+      console.error('加入美食通缉榜失败', err)
+      wx.showToast({ title: err.message || '加入失败，请重试', icon: 'none' })
     })
   }
 })

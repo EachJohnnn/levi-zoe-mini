@@ -26,6 +26,14 @@ Page({
     }
 
     const isEdit = !!generated._id
+    const currentCoupleId = wx.getStorageSync('coupleId')
+
+    // 编辑模式下校验菜品归属
+    if (isEdit && generated.coupleId && generated.coupleId !== currentCoupleId) {
+      wx.showToast({ title: '无权限编辑该菜品', icon: 'none' })
+      setTimeout(() => wx.navigateBack(), 1500)
+      return
+    }
 
     this.setData({
       dish: {
@@ -95,14 +103,26 @@ Page({
     }
 
     if (isEdit) {
-      // ========== 更新已有菜品 ==========
-      wx.cloud.database().collection('dishes').doc(dishId).update({
+      // ========== 更新已有菜品（走云函数，避免客户端权限问题） ==========
+      console.log('【菜品编辑】准备更新，dishId:', dishId, 'saveData:', saveData)
+      wx.cloud.callFunction({
+        name: 'updateDish',
         data: {
-          ...saveData,
-          updateTime: new Date()
+          dishId,
+          name: saveData.name,
+          category: saveData.category,
+          ingredients: saveData.ingredients,
+          steps: saveData.steps,
+          tips: saveData.tips,
+          videoLinks: saveData.videoLinks
         }
-      }).then(() => {
+      }).then((res) => {
+        console.log('【菜品编辑】云函数返回:', res.result)
         wx.hideLoading()
+        if (!res.result.success) {
+          wx.showToast({ title: res.result.error || '更新失败', icon: 'none' })
+          return
+        }
         wx.showToast({ title: '更新成功', icon: 'success' })
         app.globalData.generatedDish = null
         setTimeout(() => {

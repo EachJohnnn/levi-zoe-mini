@@ -14,10 +14,10 @@
 <!-- 食材 -->
 <view class="form-item">
   <view class="label">食材（每行一个）</view>
-  <textarea 
-    class="textarea" 
-    value="{{ingredientsText}}" 
-    bindinput="onIngredientsInput" 
+  <textarea
+    class="textarea"
+    value="{{ingredientsText}}"
+    bindinput="onIngredientsInput"
     maxlength="-1"
     auto-height
     show-confirm-bar="{{false}}"
@@ -27,10 +27,10 @@
 <!-- 步骤 -->
 <view class="form-item steps">
   <view class="label">步骤（每行一个）</view>
-  <textarea 
-    class="textarea" 
-    value="{{stepsText}}" 
-    bindinput="onStepsInput" 
+  <textarea
+    class="textarea"
+    value="{{stepsText}}"
+    bindinput="onStepsInput"
     maxlength="-1"
     auto-height
     show-confirm-bar="{{false}}"
@@ -45,10 +45,10 @@
 <!-- 视频链接 -->
 <view class="form-item">
   <view class="label">视频链接（每行一个，可空）</view>
-  <textarea 
-    class="textarea" 
-    value="{{videoLinksText}}" 
-    bindinput="onVideoLinksInput" 
+  <textarea
+    class="textarea"
+    value="{{videoLinksText}}"
+    bindinput="onVideoLinksInput"
     maxlength="-1"
     auto-height
     show-confirm-bar="{{false}}"

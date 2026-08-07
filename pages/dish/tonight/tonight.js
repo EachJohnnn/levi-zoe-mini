@@ -5,10 +5,16 @@ Page({
     menu: null,
     dishes: [],
     loading: true,
-    formattedDate: ''
+    formattedDate: '',
+    coupleId: '',
+    isAuthorized: false,
+    memberMap: {},
+    memberList: []
   },
 
   onLoad(options) {
+    const coupleId = wx.getStorageSync('coupleId')
+    this.setData({ coupleId })
     const id = options.id
     if (id) {
       this.loadTonightMenu(id)
@@ -25,15 +31,25 @@ Page({
   },
 
   loadTonightMenu(id) {
+    const currentCoupleId = this.data.coupleId
     this.setData({ loading: true })
     wx.cloud.database().collection('tonightMenus').doc(id).get()
       .then(res => {
+        const menu = res.data
+        if (!menu || menu.coupleId !== currentCoupleId) {
+          wx.showToast({ title: '无权限查看该菜单', icon: 'none' })
+          this.setData({ loading: false, isAuthorized: false })
+          setTimeout(() => wx.navigateBack(), 1500)
+          return
+        }
         this.setData({
-          menu: res.data,
-          formattedDate: this.formatDate(res.data.date),
-          loading: false
+          menu,
+          formattedDate: this.formatDate(menu.date),
+          loading: false,
+          isAuthorized: true
         })
-        this.loadDishes(res.data.dishes)
+        this.loadDishes(menu.dishes)
+        this.loadMemberInfo(menu.coupleId)
       })
       .catch(err => {
         console.error(err)
@@ -43,7 +59,7 @@ Page({
   },
 
   loadLatestMenu() {
-    const coupleId = wx.getStorageSync('coupleId')
+    const coupleId = this.data.coupleId
     if (!coupleId) {
       this.setData({ loading: false })
       wx.showToast({ title: '请先绑定情侣空间', icon: 'none' })
@@ -51,21 +67,28 @@ Page({
     }
 
     this.setData({ loading: true })
+    const _ = wx.cloud.database().command
     wx.cloud.database().collection('tonightMenus')
-      .where({ coupleId: coupleId })
+      .where({
+        coupleId: coupleId,
+        status: _.neq('deleted')
+      })
       .orderBy('createTime', 'desc')
       .limit(1)
       .get()
       .then(res => {
         if (res.data.length > 0) {
+          const menu = res.data[0]
           this.setData({
-            menu: res.data[0],
-            formattedDate: this.formatDate(res.data[0].date),
-            loading: false
+            menu,
+            formattedDate: this.formatDate(menu.date),
+            loading: false,
+            isAuthorized: true
           })
-          this.loadDishes(res.data[0].dishes)
+          this.loadDishes(menu.dishes)
+          this.loadMemberInfo(menu.coupleId)
         } else {
-          this.setData({ loading: false })
+          this.setData({ loading: false, isAuthorized: false })
           wx.showToast({ title: '还没有今晚菜单', icon: 'none' })
         }
       })
@@ -88,7 +111,83 @@ Page({
       .catch(err => console.error(err))
   },
 
+  // 加载情侣空间成员信息
+  loadMemberInfo(coupleId) {
+    wx.cloud.callFunction({
+      name: 'getCoupleMembers',
+      data: { coupleId }
+    })
+      .then(res => {
+        const result = res.result || {}
+        if (!result.success) {
+          console.error('加载成员信息失败:', result.error)
+          return
+        }
+        const memberMap = {}
+        const memberList = []
+        ;(result.members || []).forEach(u => {
+          const info = {
+            openid: u.openid,
+            nickName: u.nickName || u.openid?.slice(0, 8) || '未知',
+            avatarUrl: u.avatarUrl || ''
+          }
+          memberMap[u.openid] = info
+          memberList.push(info)
+        })
+        this.setData({ memberMap, memberList })
+      })
+      .catch(err => {
+        console.error('加载成员信息失败:', err)
+      })
+  },
+
+  // 指定厨师
+  assignChef(e) {
+    const { isAuthorized, menu, memberList } = this.data
+    if (!isAuthorized || !menu) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
+    if (memberList.length === 0) {
+      wx.showToast({ title: '未加载成员信息', icon: 'none' })
+      return
+    }
+    const dishId = e.currentTarget.dataset.id
+    const itemList = memberList.map(m => m.nickName)
+    wx.showActionSheet({
+      itemList,
+      success: (res) => {
+        const chef = memberList[res.tapIndex]
+        this.updateDishChef(dishId, chef.openid)
+      }
+    })
+  },
+
+  // 更新菜品厨师
+  updateDishChef(dishId, openid) {
+    const { menu } = this.data
+    const dishChefs = { ...(menu.dishChefs || {}) }
+    dishChefs[dishId] = openid
+    wx.showLoading({ title: '指定中...' })
+    wx.cloud.database().collection('tonightMenus').doc(menu._id).update({
+      data: { dishChefs }
+    }).then(() => {
+      wx.hideLoading()
+      this.setData({ 'menu.dishChefs': dishChefs })
+      wx.showToast({ title: '已指定厨师', icon: 'success' })
+    }).catch(err => {
+      wx.hideLoading()
+      console.error('指定厨师失败:', err)
+      wx.showToast({ title: '指定失败', icon: 'none' })
+    })
+  },
+
   addComment(e) {
+    const { isAuthorized } = this.data
+    if (!isAuthorized) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
     const dishId = e.currentTarget.dataset.id
     wx.showModal({
       title: '添加评论',
@@ -216,8 +315,13 @@ Page({
   },
 
   removeDishFromMenu(e) {
+    const { isAuthorized, menu } = this.data
+    if (!isAuthorized || !menu) {
+      wx.showToast({ title: '无权限操作', icon: 'none' })
+      return
+    }
     const dishId = e.currentTarget.dataset.id
-    const menuId = this.data.menu._id
+    const menuId = menu._id
   
     wx.showModal({
       title: '确认删除',
@@ -227,7 +331,7 @@ Page({
           wx.showLoading({ title: '删除中...' })
   
           // 从 dishes 数组中移除
-          const newDishes = this.data.menu.dishes.filter(id => id !== dishId)
+          const newDishes = menu.dishes.filter(id => id !== dishId)
   
           wx.cloud.database().collection('tonightMenus').doc(menuId).update({
             data: {

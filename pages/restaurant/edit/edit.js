@@ -37,9 +37,15 @@ Page({
   },
 
   loadRestaurant(id) {
+    const currentCoupleId = wx.getStorageSync('coupleId')
     wx.cloud.database().collection('restaurants').doc(id).get()
       .then(res => {
         const data = res.data
+        if (!data || data.coupleId !== currentCoupleId) {
+          wx.showToast({ title: '无权限编辑该餐厅', icon: 'none' })
+          setTimeout(() => wx.navigateBack(), 1500)
+          return
+        }
         const cuisineTags = data.cuisineTags || []
         const selectedTagMap = {}
         cuisineTags.forEach(t => { selectedTagMap[t] = true })
@@ -56,7 +62,8 @@ Page({
             latitude: data.latitude || null,
             longitude: data.longitude || null
           },
-          selectedTagMap
+          selectedTagMap,
+          restaurantCoupleId: data.coupleId
         })
       })
       .catch(err => {
@@ -286,9 +293,19 @@ Page({
     }
 
     if (isEdit) {
-      // 更新
-      db.collection('restaurants').doc(restaurantId).update({
+      // 编辑时必须校验归属
+      if (this.data.restaurantCoupleId !== coupleId) {
+        wx.showToast({ title: '无权限更新该餐厅', icon: 'none' })
+        this.setData({ saving: false })
+        return
+      }
+
+      // 更新（走云函数，避免客户端权限问题）
+      console.log('【餐厅编辑】准备更新，restaurantId:', restaurantId, 'data:', data)
+      wx.cloud.callFunction({
+        name: 'updateRestaurant',
         data: {
+          restaurantId,
           name: data.name,
           address: data.address,
           phone: data.phone,
@@ -302,8 +319,13 @@ Page({
             longitude: data.longitude
           } : {})
         }
-      }).then(() => {
+      }).then((res) => {
+        console.log('【餐厅编辑】云函数返回:', res.result)
         this.setData({ saving: false })
+        if (!res.result.success) {
+          wx.showToast({ title: res.result.error || '更新失败', icon: 'none' })
+          return
+        }
         wx.showToast({ title: '更新成功', icon: 'success' })
         setTimeout(() => wx.navigateBack(), 800)
       }).catch(err => {

@@ -1,20 +1,29 @@
 <view class="container">
   <view class="header">
-    <view class="title">想吃池</view>
+    <view class="title">美食通缉榜</view>
     <view class="count">共 {{wantDishes.length}} 道菜</view>
   </view>
 
   <view wx:if="{{loading}}" class="loading">加载中...</view>
 
   <view wx:elif="{{wantDishes.length === 0}}" class="empty">
-    <view class="empty-text">想吃池还是空的</view>
+    <view class="empty-text">通缉榜还是空的</view>
     <view class="empty-tip">去菜品详情页加入吧</view>
   </view>
 
   <view wx:else class="list">
     <view class="dish-card" wx:for="{{wantDishes}}" wx:key="_id" data-id="{{item._id}}" bindtap="removeFromWant">
-      <view class="dish-name">{{item.name}}</view>
-      <view class="dish-category">{{item.category || '未分类'}}</view>
+      <view class="dish-main">
+        <view class="dish-name">{{item.name}}</view>
+        <view class="dish-category">{{item.category || '未分类'}}</view>
+      </view>
+      <view class="adder" wx:if="{{memberMap[item.wantByOpenid]}}">
+        <image class="adder-avatar" src="{{memberMap[item.wantByOpenid].avatarUrl}}" mode="aspectFill" />
+        <text class="adder-name">{{memberMap[item.wantByOpenid].nickName}}</text>
+      </view>
+      <view class="adder" wx:elif="{{item.wantByNickName}}">
+        <text class="adder-name">{{item.wantByNickName}}</text>
+      </view>
     </view>
   </view>
 

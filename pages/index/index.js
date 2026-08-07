@@ -16,35 +16,62 @@ Page({
   // 检查登录状态（带自动补 openid 逻辑）
   checkLoginStatus() {
     try {
+      // 已登录且已绑定情侣空间时直接进首页，避免重新编译后闪登录页
+      if (wx.getStorageSync('userInfo') && wx.getStorageSync('coupleId')) {
+        wx.switchTab({ url: '/pages/home/home' })
+        return
+      }
+
       let userInfo = wx.getStorageSync('userInfo')
-      const coupleId = wx.getStorageSync('coupleId')
+      const cachedCoupleId = wx.getStorageSync('coupleId')
 
       if (userInfo) {
-        if (!userInfo.openid) {
-          // 没有 openid → 自动调用云函数补齐
-          wx.showLoading({ title: '正在获取 openid...' })
+        const finishLogin = (openid, coupleId) => {
+          userInfo.openid = openid
+          wx.setStorageSync('userInfo', userInfo)
+          app.globalData.userInfo = userInfo
+          // 优先使用数据库查询结果；查询不到时保留本地缓存，避免每次重新编译都要重绑
+          const trustedCoupleId = coupleId || cachedCoupleId || null
+          wx.setStorageSync('coupleId', trustedCoupleId)
+          app.globalData.coupleId = trustedCoupleId
 
+          this.setData({
+            userInfo,
+            hasUserInfo: true,
+            coupleId: trustedCoupleId,
+            loading: false
+          })
+
+          if (trustedCoupleId) {
+            wx.switchTab({ url: '/pages/home/home' })
+          }
+        }
+
+        const fetchUserCoupleId = (openid) => {
+          const db = wx.cloud.database()
+          const _ = db.command
+          // 以用户实际所属的情侣空间为准，兼容未设置 status 的历史记录
+          db.collection('couples').where({
+            members: openid,
+            status: _.neq('deleted')
+          }).limit(1).get()
+            .then(res => {
+              const trustedCoupleId = res.data.length > 0 ? res.data[0]._id : null
+              finishLogin(openid, trustedCoupleId)
+            })
+            .catch(err => {
+              console.error('查询情侣空间失败:', err)
+              finishLogin(openid, cachedCoupleId || null)
+            })
+        }
+
+        if (!userInfo.openid) {
+          wx.showLoading({ title: '正在获取 openid...' })
           wx.cloud.callFunction({
             name: 'login',
             success: (cloudRes) => {
-              const openid = cloudRes.result.openid
-              userInfo.openid = openid
-
-              // 保存到本地和 globalData
-              wx.setStorageSync('userInfo', userInfo)
-              app.globalData.userInfo = userInfo
-              app.globalData.coupleId = coupleId || null
-
               wx.hideLoading()
-              this.setData({
-                userInfo,
-                hasUserInfo: true,
-                coupleId: coupleId || null,
-                loading: false
-              })
-
-              console.log('✅ 已成功获取 openid:', openid)
-              wx.showToast({ title: 'openid 已获取', icon: 'success' })
+              fetchUserCoupleId(cloudRes.result.openid)
             },
             fail: (err) => {
               wx.hideLoading()
@@ -52,25 +79,14 @@ Page({
               this.setData({
                 userInfo,
                 hasUserInfo: true,
-                coupleId: coupleId || null,
+                coupleId: cachedCoupleId || null,
                 loading: false
               })
               wx.showToast({ title: '获取 openid 失败', icon: 'none' })
             }
           })
         } else {
-          // 已经有 openid 了
-          app.globalData.userInfo = userInfo
-          app.globalData.coupleId = coupleId || null
-
-          this.setData({
-            userInfo,
-            hasUserInfo: true,
-            coupleId: coupleId || null,
-            loading: false
-          })
-
-          console.log('✅ 当前已有 openid:', userInfo.openid)
+          fetchUserCoupleId(userInfo.openid)
         }
       } else {
         this.setData({ loading: false })
@@ -131,9 +147,16 @@ Page({
               userInfo,
               hasUserInfo: true
             })
-  
+
             wx.hideLoading()
-            wx.showToast({ title: '登录成功', icon: 'success' })
+
+            // 检查是否已有 coupleId
+            const existingCoupleId = wx.getStorageSync('coupleId')
+            if (existingCoupleId) {
+              wx.switchTab({ url: '/pages/home/home' })
+            } else {
+              wx.showToast({ title: '登录成功', icon: 'success' })
+            }
             console.log('新登录获取到 openid:', openid)
           },
           fail(err) {
@@ -177,6 +200,9 @@ createCouple() {
         icon: 'success',
         duration: 2000
       })
+
+      // 跳转到首页
+      wx.switchTab({ url: '/pages/home/home' })
 
       console.log('✅ 情侣空间已创建，邀请码:', inviteCode, 'coupleId:', coupleId)
     },
@@ -233,6 +259,10 @@ doJoinCouple(inviteCode) {
           title: msg || '加入成功',
           icon: 'success'
         })
+
+        // 跳转到首页
+        wx.switchTab({ url: '/pages/home/home' })
+
         console.log('✅ 加入结果:', res.result)
       } else {
         wx.showToast({
@@ -245,6 +275,40 @@ doJoinCouple(inviteCode) {
       wx.hideLoading()
       console.error(err)
       wx.showToast({ title: '加入失败', icon: 'none' })
+    }
+  })
+},
+
+// 找回我的情侣空间（不依赖本地缓存，直接按 openid 查询）
+recoverCouple() {
+  const that = this
+  wx.showLoading({ title: '查找中...' })
+
+  wx.cloud.callFunction({
+    name: 'findMyCouple',
+    success(res) {
+      wx.hideLoading()
+      if (res.result.success) {
+        const { coupleId, inviteCode, name } = res.result
+        wx.setStorageSync('coupleId', coupleId)
+        app.globalData.coupleId = coupleId
+        that.setData({ coupleId, inviteCode })
+        wx.showModal({
+          title: '已找到情侣空间',
+          content: `${name}\n邀请码：${inviteCode}`,
+          showCancel: false,
+          success: () => {
+            wx.switchTab({ url: '/pages/home/home' })
+          }
+        })
+      } else {
+        wx.showToast({ title: res.result.msg || '未找到情侣空间', icon: 'none' })
+      }
+    },
+    fail(err) {
+      wx.hideLoading()
+      console.error('找回失败:', err)
+      wx.showToast({ title: '找回失败，请重试', icon: 'none' })
     }
   })
 },

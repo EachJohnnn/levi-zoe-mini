@@ -1,0 +1,113 @@
+<view class="container">
+  <!-- 未登录 -->
+  <view wx:if="{{!userInfo}}" class="loading-wrap">
+    <text class="loading-text">正在跳转登录...</text>
+  </view>
+
+  <!-- 已登录但未绑定情侣空间 -->
+  <view wx:elif="{{userInfo && !coupleId}}">
+    <view class="couple-card">
+      <view class="avatars-row">
+        <view class="avatar-wrap">
+          <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+          <text class="avatar-name">{{userInfo.nickName}}</text>
+        </view>
+      </view>
+      <view class="couple-name">Hi，{{userInfo.nickName}}</view>
+      <view class="couple-subtitle">还没有加入情侣空间哦</view>
+    </view>
+
+    <view class="unbind-card">
+      <view class="unbind-title">💕 开启你们的小厨房</view>
+      <view class="unbind-tip">和另一半一起记录美食、探索餐厅</view>
+      <view class="bind-btn" bindtap="goBindCouple">去绑定情侣空间</view>
+    </view>
+  </view>
+
+  <!-- 已绑定情侣空间 -->
+  <view wx:else>
+    <!-- 情侣信息 -->
+    <view class="couple-card">
+      <view class="avatars-row">
+        <view class="avatar-wrap">
+          <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+          <text class="avatar-name">{{userInfo.nickName}}</text>
+        </view>
+        <text class="heart-icon">💕</text>
+        <view class="avatar-wrap">
+          <block wx:if="{{partnerInfo.avatarUrl}}">
+            <image class="avatar" src="{{partnerInfo.avatarUrl}}" mode="aspectFill" />
+          </block>
+          <block wx:else>
+            <view class="avatar avatar-placeholder">{{partnerInfo.nickName ? partnerInfo.nickName[0] : 'TA'}}</view>
+          </block>
+          <text class="avatar-name">{{partnerInfo.nickName ? partnerInfo.nickName : 'TA'}}</text>
+        </view>
+      </view>
+      <view class="couple-name">{{coupleName}}</view>
+      <view class="couple-subtitle" bindtap="editCoupleName" wx:if="{{isCreator}}">
+        <text>情侣空间已绑定 ✓ 点击编辑名称 ✏️</text>
+      </view>
+      <view class="couple-subtitle" wx:else>
+        <text>情侣空间已绑定 ✓</text>
+      </view>
+    </view>
+
+    <!-- 今晚菜单 -->
+    <view class="menu-card" wx:if="{{tonightMenu && tonightMenu.dishList && tonightMenu.dishList.length > 0}}">
+      <view class="card-header">
+        <text class="card-title">🍽️ 今晚菜单</text>
+        <view style="display: flex; gap: 20rpx;">
+          <text class="card-action" style="color: #999;" bindtap="deleteTonightMenu">删除</text>
+          <text class="card-action" bindtap="goTonightMenu">查看全部 ›</text>
+        </view>
+      </view>
+      <view class="dish-list">
+        <view wx:for="{{tonightMenu.dishList}}" wx:key="_id" class="dish-item">
+          <text class="dish-num">{{index + 1}}</text>
+          <text class="dish-name">{{item.name}}</text>
+          <text class="dish-category">{{item.category || '家常菜'}}</text>
+          <view class="chef-info" wx:if="{{tonightMenu.dishChefs && tonightMenu.dishChefs[item._id] && memberMap[tonightMenu.dishChefs[item._id]]}}">
+            <image class="chef-avatar-mini" src="{{memberMap[tonightMenu.dishChefs[item._id]].avatarUrl}}" mode="aspectFill" />
+            <text class="chef-name-mini">{{memberMap[tonightMenu.dishChefs[item._id]].nickName}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="action-row">
+        <view class="action-btn primary" bindtap="goCooking">🍳 开始烹饪</view>
+        <view class="action-btn secondary" bindtap="goTonightMenu">查看详情</view>
+      </view>
+    </view>
+
+    <!-- 无今晚菜单，显示通缉榜 -->
+    <view class="menu-card" wx:elif="{{wantDishes.length > 0}}">
+      <view class="card-header">
+        <text class="card-title">📋 美食通缉榜</text>
+        <text class="card-action" bindtap="goWantList">查看全部 ›</text>
+      </view>
+      <view class="want-preview">
+        <view wx:for="{{wantDishes}}" wx:key="_id" class="want-item">
+          <text class="want-badge">🔥</text>
+          <text class="want-name">{{item.name}}</text>
+        </view>
+      </view>
+      <view class="action-row">
+        <view class="action-btn primary" bindtap="goTonightMenu">生成今晚菜单</view>
+        <view class="action-btn secondary" bindtap="goWantList">管理通缉榜</view>
+      </view>
+    </view>
+
+    <!-- 都为空 -->
+    <view class="menu-card" wx:else>
+      <view class="empty-card">
+        <text class="empty-icon">🍽️</text>
+        <text class="empty-title">今晚还没有安排菜单</text>
+        <text class="empty-subtitle">快去添加菜品或探索盲盒吧</text>
+        <view class="action-row">
+          <view class="action-btn primary" bindtap="goAddDish">+ 添加菜品</view>
+          <view class="action-btn secondary" bindtap="goBlindbox">🎁 盲盒新菜</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -78,11 +78,56 @@ Page({
     })
   },
 
-  // 点击菜品（暂时先打印，后续做详情页）
+  // 点击菜品
   onDishTap(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
       url: `/pages/dish/detail/detail?id=${id}`
+    })
+  },
+
+  // 加入美食通缉榜
+  addToWantList(e) {
+    const id = e.currentTarget.dataset.id
+    const userInfo = wx.getStorageSync('userInfo')
+    if (!id) {
+      wx.showToast({ title: '菜品ID错误', icon: 'none' })
+      return
+    }
+
+    wx.showLoading({ title: '加入中...' })
+
+    wx.cloud.callFunction({
+      name: 'toggleDishWant',
+      data: {
+        dishId: id,
+        inWantPool: true,
+        nickName: userInfo?.nickName || '',
+        avatarUrl: userInfo?.avatarUrl || ''
+      }
+    }).then(res => {
+      wx.hideLoading()
+
+      if (!res.result || !res.result.success) {
+        const errorMsg = (res.result && res.result.error) || '加入失败'
+        wx.showToast({ title: errorMsg, icon: 'none' })
+        return
+      }
+
+      wx.showToast({ title: '已加入美食通缉榜', icon: 'success' })
+
+      // 更新本地菜品状态，切换 UI
+      const dishes = this.data.dishes.map(dish => {
+        if (dish._id === id) {
+          return { ...dish, inWantPool: true }
+        }
+        return dish
+      })
+      this.setData({ dishes })
+    }).catch(err => {
+      wx.hideLoading()
+      console.error('加入美食通缉榜失败', err)
+      wx.showToast({ title: err.message || '加入失败，请重试', icon: 'none' })
     })
   }
 })

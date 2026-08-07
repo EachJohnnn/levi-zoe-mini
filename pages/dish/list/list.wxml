@@ -12,15 +12,24 @@
   </view>
 
   <view wx:else class="list">
-    <view 
-      class="dish-card" 
-      wx:for="{{dishes}}" 
+    <view
+      class="dish-card"
+      wx:for="{{dishes}}"
       wx:key="_id"
       data-id="{{item._id}}"
       bindtap="onDishTap"
     >
       <view class="dish-name">{{item.name}}</view>
-      <view class="dish-category">{{item.category || '未分类'}}</view>
+      <view class="dish-card-row">
+        <view class="dish-category">{{item.category || '未分类'}}</view>
+        <view
+          class="want-btn {{item.inWantPool ? 'want-btn-disabled' : ''}}"
+          data-id="{{item._id}}"
+          catchtap="addToWantList"
+        >
+          {{item.inWantPool ? '已在通缉榜' : '加入美食通缉榜'}}
+        </view>
+      </view>
     </view>
   </view>
 

@@ -58,7 +58,6 @@ Page({
   submitVisit() {
     const { restaurantId, restaurantName, form } = this.data
     const coupleId = wx.getStorageSync('coupleId')
-    const userInfo = wx.getStorageSync('userInfo')
 
     if (!coupleId) {
       wx.showToast({ title: '请先绑定情侣空间', icon: 'none' })
@@ -72,55 +71,43 @@ Page({
 
     this.setData({ saving: true })
 
-    const db = wx.cloud.database()
-
     // 解析菜品
     const dishes = form.dishesText
       .split(/[,，、]/)
       .map(s => s.trim())
       .filter(s => s.length > 0)
 
-    const visitData = {
-      restaurantId,
-      restaurantName,
-      visitDate: form.visitDate,
-      totalPrice: form.totalPrice ? parseFloat(form.totalPrice) : null,
-      rating: form.rating,
-      dishes,
-      note: form.note.trim(),
-      coupleId,
-      creatorOpenid: userInfo?.openid || '',
-      createTime: new Date()
-    }
-
-    db.collection('restaurantVisits').add({ data: visitData })
-      .then(() => {
-        // 更新餐厅的 visited 和 visitCount
-        return db.collection('restaurants').doc(restaurantId).update({
-          data: {
-            visited: true,
-            visitCount: db.command.inc(1)
-          }
-        })
-      })
-      .then(() => {
-        this.setData({ saving: false })
-        wx.showToast({ title: '打卡成功！', icon: 'success' })
-        setTimeout(() => {
-          // 返回详情页并刷新
-          const pages = getCurrentPages()
-          const prevPage = pages[pages.length - 2]
-          if (prevPage && prevPage.loadVisits) {
-            prevPage.loadVisits(restaurantId)
-            prevPage.loadRestaurant(restaurantId)
-          }
-          wx.navigateBack()
-        }, 800)
-      })
-      .catch(err => {
-        console.error('打卡失败:', err)
-        this.setData({ saving: false })
-        wx.showToast({ title: '打卡失败', icon: 'none' })
-      })
+    wx.cloud.callFunction({
+      name: 'recordRestaurantVisit',
+      data: {
+        restaurantId,
+        restaurantName,
+        visitDate: form.visitDate,
+        totalPrice: form.totalPrice ? parseFloat(form.totalPrice) : null,
+        rating: form.rating,
+        dishes,
+        note: form.note.trim()
+      }
+    }).then(res => {
+      this.setData({ saving: false })
+      if (!res.result.success) {
+        wx.showToast({ title: res.result.error || '打卡失败', icon: 'none' })
+        return
+      }
+      wx.showToast({ title: '打卡成功！', icon: 'success' })
+      setTimeout(() => {
+        const pages = getCurrentPages()
+        const prevPage = pages[pages.length - 2]
+        if (prevPage && prevPage.loadVisits) {
+          prevPage.loadVisits(restaurantId)
+          prevPage.loadRestaurant(restaurantId)
+        }
+        wx.navigateBack()
+      }, 800)
+    }).catch(err => {
+      console.error('打卡失败:', err)
+      this.setData({ saving: false })
+      wx.showToast({ title: err.message || '打卡失败', icon: 'none' })
+    })
   }
 })

@@ -21,6 +21,7 @@ exports.main = async (event, context) => {
   const res = await couples.add({
     data: {
       inviteCode: inviteCode,
+      name: '我们的小厨房',
       creatorOpenid: openid,
       members: [openid],
       createTime: new Date(),

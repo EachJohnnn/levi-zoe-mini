@@ -33,9 +33,8 @@
     <view class="divider" wx:if="{{index < dishes.length - 1}}">• • •</view>
   </view>
 
-  <!-- 底部 -->
   <view class="bottom-bar">
-    <button class="save-btn" bindtap="saveAll">
+    <button class="save-btn {{saving ? 'disabled' : ''}}" bindtap="saveAll" disabled="{{saving}}">
       💾 保存 {{dishes.length}} 道菜到菜品库
     </button>
   </view>

@@ -255,8 +255,12 @@ Page({
     const coupleId = wx.getStorageSync('coupleId')
 
     // 关键修复：不用 isCurrent 字段，直接查该 couple 的最新菜单
+    const _ = wx.cloud.database().command
     wx.cloud.database().collection('tonightMenus')
-      .where({ coupleId })
+      .where({
+        coupleId,
+        status: _.neq('deleted')
+      })
       .orderBy('createTime', 'desc')
       .limit(1)
       .get()
@@ -283,6 +287,7 @@ Page({
               coupleId,
               date: new Date(),
               dishes: [dishId],
+              dishChefs: {},
               comments: [],
               createTime: new Date()
             }

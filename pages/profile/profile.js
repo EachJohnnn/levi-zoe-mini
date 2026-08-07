@@ -158,6 +158,29 @@ Page({
     })
   },
 
+  // 跳转绑定页
+  goLogin() {
+    wx.navigateTo({ url: '/pages/index/index' })
+  },
+
+  // 退出登录
+  logout() {
+    wx.showModal({
+      title: '确认退出登录',
+      content: '退出后会清除本地登录状态，需要重新授权登录',
+      confirmColor: '#FF6B6B',
+      success: (res) => {
+        if (res.confirm) {
+          wx.removeStorageSync('userInfo')
+          wx.removeStorageSync('coupleId')
+          app.globalData.userInfo = null
+          app.globalData.coupleId = null
+          wx.reLaunch({ url: '/pages/index/index' })
+        }
+      }
+    })
+  },
+
   // 上传头像
   uploadAvatar() {
     const that = this
@@ -177,16 +200,13 @@ Page({
           filePath: tempFilePath
         }).then(uploadRes => {
           const fileID = uploadRes.fileID
-          // 获取临时链接
-          return wx.cloud.getTempFileURL({ fileList: [fileID] })
-        }).then(fileRes => {
-          uploadedAvatarUrl = fileRes.fileList[0].tempFileURL
+          uploadedAvatarUrl = fileID
           const openid = that.data.userInfo.openid
-          // 更新数据库
+          // 更新数据库：直接保存云文件 ID，避免临时 URL 过期后头像消失
           return wx.cloud.database().collection('users').where({ openid }).get().then(userRes => {
             if (userRes.data.length > 0) {
               return wx.cloud.database().collection('users').doc(userRes.data[0]._id).update({
-                data: { avatarUrl: uploadedAvatarUrl }
+                data: { avatarUrl: fileID }
               })
             }
           })
