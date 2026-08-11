@@ -1,10 +1,10 @@
 page {
-  background: #FFF5F5;
+  background: var(--bg);
 }
 
 .container {
   min-height: 100vh;
-  background: #FFF5F5;
+  background: #FFF8F8;
   padding: 24rpx 20rpx 40rpx;
   box-sizing: border-box;
 }
@@ -24,25 +24,6 @@ page {
   font-size: 26rpx;
   color: #999;
   margin-top: 8rpx;
-}
-
-/* 加载中 */
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 120rpx 0;
-}
-
-.loading-icon {
-  font-size: 60rpx;
-  margin-bottom: 16rpx;
-}
-
-.loading-text {
-  font-size: 28rpx;
-  color: #999;
 }
 
 /* 来源标签 */
@@ -169,19 +150,6 @@ page {
   background: #fff;
   color: #FF6B6B;
   border: 2rpx solid #FF6B6B;
-}
-
-/* 空状态 */
-.empty {
-  text-align: center;
-  padding: 120rpx 0;
-  color: #999;
-  font-size: 28rpx;
-}
-
-.empty-icon {
-  font-size: 80rpx;
-  margin-bottom: 16rpx;
 }
 
 /* 顶部食材标签 */

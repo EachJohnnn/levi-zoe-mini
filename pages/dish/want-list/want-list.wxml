@@ -4,30 +4,40 @@
     <view class="count">共 {{wantDishes.length}} 道菜</view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-dots">
+      <view></view>
+      <view></view>
+      <view></view>
+    </view>
+    <text class="loading-text">加载中...</text>
+  </view>
 
-  <view wx:elif="{{wantDishes.length === 0}}" class="empty">
-    <view class="empty-text">通缉榜还是空的</view>
-    <view class="empty-tip">去菜品详情页加入吧</view>
+  <view wx:elif="{{wantDishes.length === 0}}" class="empty-state">
+    <text class="empty-icon">📋</text>
+    <view class="empty-title">通缉榜还是空的</view>
+    <view class="empty-subtitle">去菜品详情页加入吧</view>
   </view>
 
   <view wx:else class="list">
-    <view class="dish-card" wx:for="{{wantDishes}}" wx:key="_id" data-id="{{item._id}}" bindtap="removeFromWant">
+    <view class="card dish-card" wx:for="{{wantDishes}}" wx:key="_id" data-id="{{item._id}}" bindtap="removeFromWant">
       <view class="dish-main">
         <view class="dish-name">{{item.name}}</view>
-        <view class="dish-category">{{item.category || '未分类'}}</view>
+        <text class="tag">{{item.category || '未分类'}}</text>
       </view>
-      <view class="adder" wx:if="{{memberMap[item.wantByOpenid]}}">
-        <image class="adder-avatar" src="{{memberMap[item.wantByOpenid].avatarUrl}}" mode="aspectFill" />
-        <text class="adder-name">{{memberMap[item.wantByOpenid].nickName}}</text>
-      </view>
-      <view class="adder" wx:elif="{{item.wantByNickName}}">
-        <text class="adder-name">{{item.wantByNickName}}</text>
+      <view class="adder">
+        <block wx:if="{{memberMap[item.wantByOpenid] && memberMap[item.wantByOpenid].avatarUrl}}">
+          <image class="avatar avatar-sm adder-avatar" src="{{memberMap[item.wantByOpenid].avatarUrl}}" mode="aspectFill" />
+        </block>
+        <block wx:elif="{{memberMap[item.wantByOpenid]}}">
+          <view class="avatar avatar-sm avatar-placeholder adder-avatar">{{memberMap[item.wantByOpenid].nickName[0]}}</view>
+        </block>
+        <text class="adder-name">{{memberMap[item.wantByOpenid].nickName || item.wantByNickName || '某人'}}</text>
       </view>
     </view>
   </view>
 
-  <view class="btn-group">
-    <button class="btn primary" bindtap="generateTonightMenu">生成今晚菜单</button>
+  <view class="float-btn">
+    <view class="btn btn-primary" bindtap="generateTonightMenu">生成今晚菜单</view>
   </view>
 </view>

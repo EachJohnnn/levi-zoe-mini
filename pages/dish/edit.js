@@ -146,7 +146,8 @@ Page({
         wx.showToast({ title: '保存成功', icon: 'success' })
         app.globalData.generatedDish = null
         setTimeout(() => {
-          wx.navigateBack()
+          // 新菜品保存后直接跳转到菜品库
+          wx.redirectTo({ url: '/pages/dish/list/list' })
         }, 1500)
       }).catch(err => {
         wx.hideLoading()

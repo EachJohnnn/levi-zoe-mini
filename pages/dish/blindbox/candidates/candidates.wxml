@@ -11,8 +11,9 @@
     <view class="dish-reason">💡 {{item.reason}}</view>
   </view>
 
-  <view class="empty" wx:if="{{candidates.length === 0}}">
-    暂无候选菜品
+  <view class="empty-state" wx:if="{{candidates.length === 0}}">
+    <text class="empty-icon">🎲</text>
+    <view class="empty-title">暂无候选菜品</view>
   </view>
 
   <!-- 底部 -->

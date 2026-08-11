@@ -1,50 +1,110 @@
 <view class="container">
-  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-dots">
+      <view></view>
+      <view></view>
+      <view></view>
+    </view>
+    <text class="loading-text">加载中...</text>
+  </view>
 
   <block wx:elif="{{menu}}">
     <view class="header">
       <view class="title">今晚菜单</view>
       <view class="date">{{formattedDate}}</view>
+      <view class="header-actions">
+        <text class="header-action" bindtap="openHistory">📜 历史记录</text>
+        <text class="header-action" bindtap="resetMenu">🔄 清空菜单</text>
+      </view>
     </view>
 
     <view class="list" wx:if="{{dishes.length > 0}}">
-      <view class="dish-item" wx:for="{{dishes}}" wx:for-item="dish" wx:key="_id">
+      <view class="card dish-item" wx:for="{{dishes}}" wx:for-item="dish" wx:key="_id">
         <view class="dish-main">
           <view class="dish-name">{{dish.name}}</view>
-          <view class="dish-category">{{dish.category || '未分类'}}</view>
+          <text class="tag dish-category">{{dish.category || '未分类'}}</text>
+
+          <button class="comment-btn" data-id="{{dish._id}}" bindtap="addComment">评论</button>
+
+          <view class="comments" wx:if="{{menu.comments && menu.comments.length > 0}}">
+            <view class="comment" wx:for="{{menu.comments}}" wx:for-item="comment" wx:key="time" wx:if="{{comment.dishId === dish._id}}">
+              <view class="comment-user">{{comment.user}}：</view>
+              <view class="comment-content">{{comment.content}}</view>
+            </view>
+            <button class="delete-dish-btn" data-id="{{dish._id}}" bindtap="removeDishFromMenu">从菜单中删除</button>
+          </view>
         </view>
 
         <view class="chef-wrap" data-id="{{dish._id}}" bindtap="assignChef">
           <block wx:if="{{menu.dishChefs && menu.dishChefs[dish._id] && memberMap[menu.dishChefs[dish._id]]}}">
-            <image class="chef-avatar" src="{{memberMap[menu.dishChefs[dish._id]].avatarUrl}}" mode="aspectFill" />
+            <block wx:if="{{memberMap[menu.dishChefs[dish._id]].avatarUrl}}">
+              <image class="avatar avatar-sm" src="{{memberMap[menu.dishChefs[dish._id]].avatarUrl}}" mode="aspectFill" />
+            </block>
+            <block wx:else>
+              <view class="avatar avatar-sm avatar-placeholder">{{memberMap[menu.dishChefs[dish._id]].nickName[0]}}</view>
+            </block>
             <text class="chef-name">{{memberMap[menu.dishChefs[dish._id]].nickName}}</text>
           </block>
           <block wx:else>
             <view class="chef-placeholder">+ 指定厨师</view>
           </block>
         </view>
-
-        <button class="comment-btn" data-id="{{dish._id}}" bindtap="addComment">评论</button>
-
-        <view class="comments" wx:if="{{menu.comments && menu.comments.length > 0}}">
-          <view class="comment" wx:for="{{menu.comments}}" wx:for-item="comment" wx:key="time" wx:if="{{comment.dishId === dish._id}}">
-            <view class="comment-user">{{comment.user}}：</view>
-            <view class="comment-content">{{comment.content}}</view>
-          </view>
-          <button class="delete-dish-btn" data-id="{{dish._id}}" bindtap="removeDishFromMenu">从菜单中删除</button>
-        </view>
       </view>
     </view>
 
-    <view wx:else class="empty">菜单中还没有菜品</view>
+    <view wx:else class="empty-state">
+      <text class="empty-icon">🍽️</text>
+      <view class="empty-title">菜单中还没有菜品</view>
+      <view class="empty-subtitle">可以从美食通缉榜或菜品库添加</view>
+      <view class="action-row">
+        <view class="btn btn-primary btn-sm" bindtap="goWantList">从通缉榜生成</view>
+        <view class="btn btn-secondary btn-sm" bindtap="goDishList">从菜品库挑选</view>
+      </view>
+    </view>
   </block>
 
-  <view wx:else class="empty">还没有今晚菜单，去生成一个吧～</view>
+  <view wx:else class="empty-state">
+    <text class="empty-icon">🍽️</text>
+    <view class="empty-title">还没有今晚菜单</view>
+    <view class="archive-tip" wx:if="{{showArchiveTip}}">昨日菜单已自动归档</view>
+    <view class="empty-subtitle">不做的菜可以先加入美食通缉榜，当天再从通缉榜生成</view>
+    <view class="action-row">
+      <view class="btn btn-primary btn-sm" bindtap="goWantList">从通缉榜生成</view>
+      <view class="btn btn-secondary btn-sm" bindtap="goDishList">从菜品库挑选</view>
+    </view>
+  </view>
 
   <!-- 底部操作按钮 -->
   <view class="bottom-actions" wx:if="{{dishes && dishes.length > 0}}">
-    <button class="action-btn shopping" bindtap="generateShoppingList">🛒 购物清单</button>
-    <button class="action-btn cooking" bindtap="startCooking">🔥 开始做菜</button>
+    <button class="btn btn-secondary" bindtap="generateShoppingList"> 购物清单</button>
+    <button class="btn btn-primary" bindtap="startCooking">🔥 开始做菜</button>
   </view>
 
+  <!-- 历史记录弹窗 -->
+  <view class="history-overlay" wx:if="{{showHistory}}" bindtap="closeHistory">
+    <view class="history-modal" catchtap="preventClose">
+      <view class="history-modal-header">
+        <text class="history-modal-title">📜 历史菜单</text>
+        <text class="history-modal-close" bindtap="closeHistory">✕</text>
+      </view>
+      <scroll-view class="history-list" scroll-y>
+        <view wx:if="{{historyList.length > 0}}">
+          <view
+            wx:for="{{historyList}}"
+            wx:key="_id"
+            class="history-item"
+            data-id="{{item._id}}"
+            bindtap="viewHistoryMenu"
+          >
+            <view class="history-date">{{item.dateText}}</view>
+            <view class="history-meta">{{item.dishCount}} 道菜</view>
+            <view class="history-arrow">›</view>
+          </view>
+        </view>
+        <view wx:else class="history-empty">
+          暂无历史菜单记录
+        </view>
+      </scroll-view>
+    </view>
+  </view>
 </view>

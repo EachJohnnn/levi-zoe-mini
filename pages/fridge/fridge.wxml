@@ -42,10 +42,10 @@
     </view>
   </view>
 
-  <view class="empty" wx:if="{{items.length === 0}}">
+  <view class="empty-state" wx:if="{{items.length === 0}}">
     <view class="empty-icon">🥗</view>
-    <view>冰箱空空如也~</view>
-    <view>在上方添加食材吧</view>
+    <view class="empty-title">冰箱空空如也~</view>
+    <view class="empty-subtitle">在上方添加食材吧</view>
   </view>
 
   <!-- 底部推荐按钮 -->

@@ -4,15 +4,78 @@
     <text class="header-subtitle">记录菜谱、规划菜单、探索新菜</text>
   </view>
 
-  <view class="add-btn" bindtap="goAddDish">
-    <text>+ AI 生成新菜品</text>
+  <!-- 统计卡片 -->
+  <view class="stats-grid">
+    <view class="card stat-card" bindtap="goDishList">
+      <text class="stat-icon">📚</text>
+      <text class="stat-num">{{stats.dishCount}}</text>
+      <text class="stat-label">菜品</text>
+    </view>
+    <view class="card stat-card" bindtap="goWantList">
+      <text class="stat-icon">🔥</text>
+      <text class="stat-num">{{stats.wantCount}}</text>
+      <text class="stat-label">想吃</text>
+    </view>
+    <view class="card stat-card" bindtap="goTonightMenu">
+      <text class="stat-icon">🍽️</text>
+      <text class="stat-num">{{stats.tonightCount}}</text>
+      <text class="stat-label">今晚</text>
+    </view>
+  </view>
+
+  <view class="btn btn-primary add-btn" bindtap="goAddDish">
+    + AI 生成新菜品
+  </view>
+
+  <!-- 今晚菜单预览 -->
+  <view class="card preview-card" wx:if="{{tonightMenu && tonightMenu.dishCount > 0}}">
+    <view class="preview-header">
+      <text class="preview-title">🍽️ {{tonightMenu.name}}</text>
+      <text class="preview-action" bindtap="goTonightMenu">查看 ›</text>
+    </view>
+    <view class="preview-sub">已安排 {{tonightMenu.dishCount}} 道菜</view>
+  </view>
+
+  <!-- 最近添加 -->
+  <view class="card preview-card" wx:if="{{latestDishes.length > 0}}">
+    <view class="preview-header">
+      <text class="preview-title">🌟 最近添加</text>
+      <text class="preview-action" bindtap="goDishList">全部 ›</text>
+    </view>
+    <scroll-view class="latest-scroll" scroll-x="true">
+      <view
+        wx:for="{{latestDishes}}"
+        wx:key="_id"
+        class="latest-item"
+        data-id="{{item._id}}"
+        bindtap="onLatestTap"
+      >
+        <text class="latest-icon">🍽️</text>
+        <text class="latest-name">{{item.name}}</text>
+        <text class="tag" wx:if="{{item.category}}">{{item.category}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 美食通缉榜预览 -->
+  <view class="card preview-card" wx:if="{{wantPreview.length > 0}}">
+    <view class="preview-header">
+      <text class="preview-title">📋 美食通缉榜</text>
+      <text class="preview-action" bindtap="goWantList">管理 ›</text>
+    </view>
+    <view class="want-mini-list">
+      <view wx:for="{{wantPreview}}" wx:key="_id" class="want-mini-item">
+        <text class="want-mini-name">{{item.name}}</text>
+        <text class="tag" wx:if="{{item.category}}">{{item.category}}</text>
+      </view>
+    </view>
   </view>
 
   <view class="feature-grid">
     <view
       wx:for="{{features}}"
       wx:key="label"
-      class="feature-item"
+      class="card feature-item"
       data-url="{{item.url}}"
       bindtap="onFeatureTap"
     >

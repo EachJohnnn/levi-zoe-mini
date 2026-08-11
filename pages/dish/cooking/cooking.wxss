@@ -1,24 +1,11 @@
 page {
-  background: #FFF5F5;
+  background: var(--bg);
 }
 
 .container {
   min-height: 100vh;
-  background: #FFF5F5;
   padding: 24rpx 20rpx 40rpx;
   box-sizing: border-box;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 60vh;
-}
-
-.loading-text {
-  font-size: 32rpx;
-  color: #FF6B6B;
 }
 
 /* 标签栏 */

@@ -10,9 +10,13 @@
   </view>
 
   <!-- 加载中 -->
-  <view class="loading" wx:if="{{loading}}">
-    <view class="loading-icon">🤖</view>
-    <view class="loading-text">AI 正在推荐菜品...</view>
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <view class="loading-dots">
+      <view></view>
+      <view></view>
+      <view></view>
+    </view>
+    <text class="loading-text">AI 正在推荐菜品...</text>
   </view>
 
   <!-- 推荐列表 -->
@@ -67,9 +71,9 @@
   </view>
 
   <!-- 空状态 -->
-  <view class="empty" wx:if="{{!loading && recommendations.length === 0}}">
-    <view class="empty-icon">🤷</view>
-    <view>暂无推荐</view>
-    <view>试着添加更多食材吧~</view>
+  <view class="empty-state" wx:if="{{!loading && recommendations.length === 0}}">
+    <text class="empty-icon"></text>
+    <view class="empty-title">暂无推荐</view>
+    <view class="empty-subtitle">试着添加更多食材吧~</view>
   </view>
 </view>

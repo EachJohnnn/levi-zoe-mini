@@ -1,21 +1,14 @@
 page {
-  background: #FFF5F5;
-}
-
-.container {
-  min-height: 100vh;
-  background: #FFF5F5;
-  padding: 24rpx 20rpx 40rpx;
-  box-sizing: border-box;
+  background: var(--bg);
 }
 
 /* 用户信息卡片 */
 .user-card {
   background: #fff;
-  border-radius: 24rpx;
+  border-radius: var(--radius-md);
   padding: 32rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
 }
@@ -27,95 +20,65 @@ page {
 }
 
 .user-avatar {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  border: 4rpx solid #FF6B6B;
+  border: 4rpx solid var(--coral-400);
 }
 
 .avatar-overlay {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 40rpx;
-  height: 40rpx;
-  background: rgba(0,0,0,0.5);
+  width: 44rpx;
+  height: 44rpx;
+  background: #fff;
+  border: 2rpx solid var(--coral-200);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24rpx;
+  box-shadow: var(--shadow-sm);
 }
 
 .user-info {
   flex: 1;
+  min-width: 0;
 }
 
 .user-name {
   font-size: 34rpx;
   font-weight: 500;
-  color: #333;
+  color: var(--gray-800);
   display: block;
-  margin-bottom: 16rpx;
+  margin-bottom: 8rpx;
 }
 
 .user-id {
   font-size: 24rpx;
-  color: #999;
+  color: var(--text-sub);
   display: block;
-  margin-top: 8rpx;
-}
-
-.edit-btn {
-  font-size: 26rpx;
-  color: #FF6B6B;
-  padding: 8rpx 20rpx;
-  border: 2rpx solid #FF6B6B;
-  border-radius: 28rpx;
+  word-break: break-all;
 }
 
 /* 情侣空间卡片 */
 .couple-card {
-  background: #fff;
-  border-radius: 24rpx;
-  padding: 32rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
-
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.section-action {
-  font-size: 26rpx;
-  color: #FF6B6B;
+  margin-bottom: var(--space-md);
 }
 
 .couple-name-row {
   display: flex;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .couple-name {
   font-size: 30rpx;
-  color: #333;
+  color: var(--gray-800);
   flex: 1;
 }
 
 .edit-icon {
   font-size: 28rpx;
-  color: #999;
+  color: var(--text-sub);
   margin-left: 12rpx;
 }
 
@@ -130,8 +93,8 @@ page {
   display: flex;
   align-items: center;
   padding: 16rpx 20rpx;
-  background: #f9f9f9;
-  border-radius: 14rpx;
+  background: var(--gray-100);
+  border-radius: var(--radius-sm);
 }
 
 .member-avatar {
@@ -139,24 +102,25 @@ page {
   height: 60rpx;
   border-radius: 50%;
   margin-right: 16rpx;
-  background: #FF6B6B;
+  background: var(--coral-400);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   font-size: 24rpx;
+  flex-shrink: 0;
 }
 
 .member-name {
   font-size: 28rpx;
-  color: #333;
+  color: var(--gray-800);
   flex: 1;
 }
 
 .member-tag {
   font-size: 22rpx;
-  color: #FF6B6B;
-  background: #FFF0F0;
+  color: var(--coral-400);
+  background: var(--coral-100);
   padding: 4rpx 12rpx;
   border-radius: 12rpx;
   margin-right: 12rpx;
@@ -164,72 +128,48 @@ page {
 
 .kick-btn {
   font-size: 24rpx;
-  color: #999;
+  color: var(--text-sub);
   padding: 6rpx 14rpx;
 }
 
-/* 危险操作 */
-.danger-section {
-  margin-top: 32rpx;
-}
-
-.danger-btn {
-  width: 100%;
-  height: 80rpx;
-  background: #fff;
-  color: #FF6B6B;
-  border: 2rpx solid #FF6B6B;
-  border-radius: 40rpx;
-  font-size: 28rpx;
+/* 操作区 */
+.invite-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 2rpx solid var(--gray-200);
 }
 
-/* 未绑定状态 */
-.unbind-card {
-  background: #fff;
-  border-radius: 24rpx;
-  padding: 60rpx 40rpx;
-  text-align: center;
-  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
-}
-
-.unbind-text {
+.invite-label {
   font-size: 28rpx;
-  color: #999;
-  margin-bottom: 24rpx;
-}
-
-.bind-btn {
-  width: 80%;
-  height: 80rpx;
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
-  color: #fff;
-  border-radius: 40rpx;
-  font-size: 30rpx;
+  color: var(--text-sub);
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 0 auto;
 }
 
-/* 退出登录 */
-.logout-section {
+.invite-code {
+  font-size: 32rpx;
+  color: var(--coral-400);
+  font-weight: bold;
+  margin-left: 12rpx;
+  letter-spacing: 4rpx;
+}
+
+.copy-hint {
+  font-size: 24rpx;
+  color: var(--gray-400);
+}
+
+.action-section {
   margin-top: 48rpx;
-  padding: 0 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
 }
 
-.logout-btn {
-  width: 100%;
-  height: 84rpx;
-  background: #fff;
-  color: #666;
-  border: 2rpx solid #ddd;
-  border-radius: 42rpx;
-  font-size: 28rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.06);
+.unbind-card {
+  text-align: center;
+  padding: 80rpx 40rpx;
 }
