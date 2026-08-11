@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <b>A WeChat Mini Program for couples · record recipes, plan dinners, and explore restaurants together</b>
+  <b>A WeChat Mini Program for everyday life · record recipes, plan dinners, and explore restaurants</b>
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
 
 ## 📖 Introduction
 
-**Levi & Zoe Kitchen** is a WeChat Mini Program designed for couples. It helps you:
+**Levi & Zoe Kitchen** is a WeChat Mini Program for couples, roommates, and anyone who enjoys cooking. Whether you're sharing meals with a partner, living with roommates, or cooking solo, it helps you:
 
 - 🍳 Generate and save recipes with AI
 - 📋 Build a "Wanted Dishes" list for dishes you want to try
@@ -33,7 +33,17 @@
 | 📋 Wanted List | Mark dishes as "want to try" and generate tonight's menu from the list |
 | 🍽️ Tonight's Menu | Assign chefs, generate shopping lists, view history, auto-archive old menus |
 | ️ Restaurant Map | Filter by cuisine/distance and view restaurants on a map |
-| 💕 Couple Space | Invite your partner to join and share data |
+| 💕 Shared Space | Invite your partner or roommates to join and share data |
+
+## 📸 Screenshots
+
+> Add screenshots of the main pages here, such as Home, Dish Library, Tonight's Menu, and Restaurant Map.
+>
+> Suggested placeholders:
+> - Home: tonight's menu and wanted list preview
+> - Dish Library: category filter and search
+> - Tonight's Menu: assign chefs and shopping list
+> - Restaurant: map mode and distance filtering
 
 ## 🚀 Tech Stack
 
