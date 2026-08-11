@@ -20,19 +20,40 @@
 
 - 🍳 Generate and save recipes with AI
 - 📋 Build a "Wanted Dishes" list for dishes you want to try
-- ️ Generate tonight's menu and assign a chef for each dish
-- ️ Auto-generate shopping lists
-- 🗺️ Save restaurants, filter by cuisine/distance, and view them on a map
+- 🍽️ Generate tonight's menu and assign a chef for each dish
+- 🛒 Auto-generate shopping lists
+- 🗺️ Save restaurants, filter by cuisine/distance, view them on a map, and navigate with one tap
 
-##  Features
+## ✨ Features
+
+### 🍳 Cooking Management
+
+From saving recipes to planning tonight's menu — all-in-one meal planning:
+
+- 🍳 AI-generated recipes saved to the dish library
+- 📚 Dish library with category filter, sort, and search
+- 📋 "Wanted Dishes" list for dishes you want to try
+- 🍽️ Generate tonight's menu and assign chefs
+- 🛒 Auto-generate shopping lists
+
+### 🍽️ Restaurant Check-ins
+
+Save restaurants you want to try or have visited, then view them on a map and navigate with one tap:
+
+- 🗺️ Filter restaurants by cuisine or distance
+- 🏷️ Track want-to-try / visited status
+- 🚗 One-tap navigation to the restaurant
+- 📍 Map mode for visual exploration
+
+### Module Overview
 
 | Module | Description |
 |--------|-------------|
-|  Cooking Hub | AI dish generation, dish statistics, recent dishes and wanted preview |
+| 🍳 Cooking Hub | AI dish generation, dish statistics, recent dishes and wanted preview |
 | 📚 Dish Library | Category filter, sort, search, and paginated loading without limits |
 | 📋 Wanted List | Mark dishes as "want to try" and generate tonight's menu from the list |
 | 🍽️ Tonight's Menu | Assign chefs, generate shopping lists, view history, auto-archive old menus |
-| ️ Restaurant Map | Filter by cuisine/distance and view restaurants on a map |
+| 🗺️ Restaurant Map | Filter by cuisine/distance and view restaurants on a map |
 | 💕 Shared Space | Invite your partner or roommates to join and share data |
 
 ## 📸 Screenshots
