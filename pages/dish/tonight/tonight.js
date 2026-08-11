@@ -1,5 +1,14 @@
 const app = getApp()
 
+// 判断两个日期是否为同一天（本地时间）
+function isSameDay(dateA, dateB) {
+  const a = new Date(dateA)
+  const b = new Date(dateB)
+  return a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+}
+
 Page({
   data: {
     menu: null,
@@ -9,7 +18,10 @@ Page({
     coupleId: '',
     isAuthorized: false,
     memberMap: {},
-    memberList: []
+    memberList: [],
+    showHistory: false,
+    historyList: [],
+    showArchiveTip: false
   },
 
   onLoad(options) {
@@ -66,7 +78,7 @@ Page({
       return
     }
 
-    this.setData({ loading: true })
+    this.setData({ loading: true, showArchiveTip: false })
     const _ = wx.cloud.database().command
     wx.cloud.database().collection('tonightMenus')
       .where({
@@ -79,6 +91,23 @@ Page({
       .then(res => {
         if (res.data.length > 0) {
           const menu = res.data[0]
+          const menuDate = menu.date || menu.createTime
+          const today = new Date()
+
+          // 如果菜单不是今天的，自动归档
+          if (!isSameDay(menuDate, today)) {
+            this.archiveMenu(menu._id, () => {
+              this.setData({
+                menu: null,
+                dishes: [],
+                loading: false,
+                isAuthorized: false,
+                showArchiveTip: true
+              })
+            })
+            return
+          }
+
           this.setData({
             menu,
             formattedDate: this.formatDate(menu.date),
@@ -89,7 +118,6 @@ Page({
           this.loadMemberInfo(menu.coupleId)
         } else {
           this.setData({ loading: false, isAuthorized: false })
-          wx.showToast({ title: '还没有今晚菜单', icon: 'none' })
         }
       })
       .catch(err => {
@@ -97,6 +125,21 @@ Page({
         this.setData({ loading: false })
         wx.showToast({ title: '加载失败', icon: 'none' })
       })
+  },
+
+  // 归档旧菜单
+  archiveMenu(menuId, callback) {
+    wx.cloud.database().collection('tonightMenus').doc(menuId).update({
+      data: {
+        status: 'deleted',
+        archiveTime: new Date()
+      }
+    }).then(() => {
+      if (typeof callback === 'function') callback()
+    }).catch(err => {
+      console.error('归档菜单失败:', err)
+      if (typeof callback === 'function') callback()
+    })
   },
 
   loadDishes(dishIds) {
@@ -224,19 +267,106 @@ Page({
     return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
   },
 
+  // 一键清空/重置菜单
+  resetMenu() {
+    const { menu } = this.data
+    if (!menu || !menu._id) return
+    wx.showModal({
+      title: '确认清空菜单',
+      content: '清空后可以从美食通缉榜或菜品库重新生成今晚菜单。',
+      confirmColor: '#FF6B6B',
+      success: (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '清空中...' })
+          wx.cloud.database().collection('tonightMenus').doc(menu._id).update({
+            data: {
+              status: 'deleted',
+              deleteTime: new Date()
+            }
+          }).then(() => {
+            wx.hideLoading()
+            wx.showToast({ title: '已清空菜单', icon: 'success' })
+            this.setData({ menu: null, dishes: [], isAuthorized: false })
+          }).catch(err => {
+            wx.hideLoading()
+            console.error('清空菜单失败:', err)
+            wx.showToast({ title: '清空失败', icon: 'none' })
+          })
+        }
+      }
+    })
+  },
+
+  // 从通缉榜生成
+  goWantList() {
+    wx.navigateTo({ url: '/pages/dish/want-list/want-list' })
+  },
+
+  // 从菜品库挑选
+  goDishList() {
+    wx.navigateTo({ url: '/pages/dish/list/list' })
+  },
+
+  // 打开历史记录
+  openHistory() {
+    this.setData({ showHistory: true })
+    this.loadHistory()
+  },
+
+  // 关闭历史记录
+  closeHistory() {
+    this.setData({ showHistory: false })
+  },
+
+  // 加载历史菜单
+  loadHistory() {
+    const coupleId = this.data.coupleId
+    if (!coupleId) return
+    wx.cloud.database().collection('tonightMenus')
+      .where({ coupleId, status: 'deleted' })
+      .orderBy('createTime', 'desc')
+      .limit(30)
+      .get()
+      .then(res => {
+        const historyList = (res.data || []).map(menu => ({
+          _id: menu._id,
+          dateText: this.formatDate(menu.date || menu.createTime),
+          dishCount: (menu.dishes || []).length
+        }))
+        this.setData({ historyList })
+      })
+      .catch(err => {
+        console.error('加载历史菜单失败:', err)
+      })
+  },
+
+  // 查看某条历史菜单
+  viewHistoryMenu(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    wx.navigateTo({
+      url: `/pages/dish/tonight/tonight?id=${id}`
+    })
+    this.setData({ showHistory: false })
+  },
+
+  preventClose() {
+    // 阻止点击弹窗内容时关闭
+  },
+
   generateShoppingList() {
     const app = getApp()
-  
+
     if (!this.data.menu || !this.data.menu._id) {
       wx.showToast({ title: '菜单数据未加载', icon: 'none' })
       return
     }
-  
+
     if (!this.data.dishes || this.data.dishes.length === 0) {
       wx.showToast({ title: '菜单中没有菜', icon: 'none' })
       return
     }
-  
+
     // 检查缓存
     if (this.data.menu.shoppingListId) {
       wx.navigateTo({
@@ -244,9 +374,9 @@ Page({
       })
       return
     }
-  
+
     wx.showLoading({ title: 'AI 汇总中...' })
-  
+
     wx.cloud.callFunction({
       name: 'generateShoppingList',
       data: {
@@ -257,17 +387,17 @@ Page({
       }
     }).then(res => {
       wx.hideLoading()
-  
+
       if (!res.result || !res.result.success) {
         const errMsg = (res.result && res.result.error) || '生成失败'
         wx.showModal({ title: '生成失败', content: errMsg, showCancel: false })
         return
       }
-  
+
       const { items, condiments } = res.result.data
       const coupleId = wx.getStorageSync('coupleId')
       const db = wx.cloud.database()
-  
+
       db.collection('shoppingLists').add({
         data: {
           coupleId: coupleId,
@@ -285,7 +415,7 @@ Page({
           wx.showToast({ title: '保存失败', icon: 'none' })
           return
         }
-  
+
         // 缓存 shoppingListId（失败不影响跳转）
         wx.cloud.callFunction({
           name: 'updateMenuField',
@@ -299,7 +429,7 @@ Page({
             this.setData({ 'menu.shoppingListId': addRes._id })
           }
         }).catch(err => console.error('缓存失败', err))
-  
+
         wx.navigateTo({
           url: `/pages/dish/shopping-list/shopping-list?id=${addRes._id}`
         })
@@ -322,17 +452,17 @@ Page({
     }
     const dishId = e.currentTarget.dataset.id
     const menuId = menu._id
-  
+
     wx.showModal({
       title: '确认删除',
       content: '确定从今晚菜单中删除这道菜吗？',
       success: (res) => {
         if (res.confirm) {
           wx.showLoading({ title: '删除中...' })
-  
+
           // 从 dishes 数组中移除
           const newDishes = menu.dishes.filter(id => id !== dishId)
-  
+
           wx.cloud.database().collection('tonightMenus').doc(menuId).update({
             data: {
               dishes: newDishes,
@@ -341,14 +471,14 @@ Page({
           }).then(() => {
             wx.hideLoading()
             wx.showToast({ title: '已删除' })
-            this.loadTonightMenu(menuId)   // 注意：原可能写成 loadMenu，确保为 loadTonightMenu
+            this.loadTonightMenu(menuId)
           })
         }
       }
     })
   },
 
-    startCooking() {
+  startCooking() {
     if (!this.data.menu || !this.data.menu._id) {
       wx.showToast({ title: '菜单数据错误', icon: 'none' })
       return

@@ -1,5 +1,14 @@
 const app = getApp()
 
+// 判断两个日期是否为同一天（本地时间）
+function isSameDay(dateA, dateB) {
+  const a = new Date(dateA)
+  const b = new Date(dateB)
+  return a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+}
+
 Page({
   data: {
     userInfo: null,
@@ -11,7 +20,34 @@ Page({
     wantDishes: [],
     loading: true,
     isCreator: false,
-    memberMap: {}
+    memberMap: {},
+    showTutorial: false,
+    sopList: [
+      {
+        title: '1. 添加菜品',
+        desc: '在“做菜”页点击“AI 生成新菜品”，输入菜名即可生成菜谱并保存到菜品库。'
+      },
+      {
+        title: '2. 生成今晚菜单',
+        desc: '进入“今晚菜单”页面，可以从美食通缉榜一键生成，也可以从菜品库自由挑选当天想吃的菜。'
+      },
+      {
+        title: '3. 指定厨师',
+        desc: '生成今晚菜单后，点击每道菜右侧头像即可指定由谁负责烹饪。'
+      },
+      {
+        title: '4. 美食通缉榜',
+        desc: '在菜品库点击“🔥 想吃”，就能把菜品加入通缉榜，方便后续安排。'
+      },
+      {
+        title: '5. 记录餐厅',
+        desc: '在“餐厅”页添加去过的或想去的餐厅，可在地图模式上一览位置。'
+      },
+      {
+        title: '6. 邀请另一半',
+        desc: '在“我的”页长按/点击邀请码即可复制，把 6 位数字发给对方加入情侣空间。'
+      }
+    ]
   },
 
   onShow() {
@@ -145,6 +181,12 @@ Page({
       .then(res => {
         if (res.data.length > 0) {
           const menu = res.data[0]
+          const menuDate = menu.date || menu.createTime
+          // 只显示当天的菜单，否则当成没有菜单
+          if (!isSameDay(menuDate, new Date())) {
+            this.setData({ tonightMenu: null })
+            return
+          }
           // 加载菜品详情
           this.loadMenuDishes(menu)
         } else {
@@ -221,9 +263,43 @@ Page({
     }, 300)
   },
 
-  // 跳转到添加菜品
-  goAddDish() {
+  // 跳转到菜品库
+  goDishList() {
     wx.switchTab({ url: '/pages/cook/cook' })
+    setTimeout(() => {
+      wx.navigateTo({ url: '/pages/dish/list/list' })
+    }, 300)
+  },
+
+  // 跳转到添加菜品（AI 生成）
+  goAddDish() {
+    wx.showModal({
+      title: '添加新菜品',
+      placeholderText: '请输入菜名（如：番茄炒蛋）',
+      editable: true,
+      success: (res) => {
+        if (res.confirm && res.content) {
+          const dishName = res.content.trim()
+          wx.showLoading({ title: 'AI正在生成菜谱...' })
+          wx.cloud.callFunction({
+            name: 'generateDish',
+            data: { dishName }
+          }).then(cloudRes => {
+            wx.hideLoading()
+            if (cloudRes.result.success) {
+              getApp().globalData.generatedDish = cloudRes.result.dishData
+              wx.navigateTo({ url: '/pages/dish/edit' })
+            } else {
+              wx.showToast({ title: '生成失败', icon: 'none' })
+            }
+          }).catch(err => {
+            wx.hideLoading()
+            console.error(err)
+            wx.showToast({ title: '生成失败', icon: 'none' })
+          })
+        }
+      }
+    })
   },
 
   // 跳转到盲盒
@@ -264,5 +340,18 @@ Page({
         }
       }
     })
+  },
+
+  // 打开/关闭教程窗口
+  openTutorial() {
+    this.setData({ showTutorial: true })
+  },
+
+  closeTutorial() {
+    this.setData({ showTutorial: false })
+  },
+
+  preventClose() {
+    // 阻止点击弹窗内容时关闭
   }
 })

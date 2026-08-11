@@ -24,10 +24,10 @@
     "pages/restaurant/map/map"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#FFF5F5",
+    "navigationBarBackgroundColor": "#FFF8F8",
     "navigationBarTitleText": "Levi & Zoe",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#FFF5F5"
+    "backgroundColor": "#FFF8F8"
   },
   "tabBar": {
     "color": "#999",

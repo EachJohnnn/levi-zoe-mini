@@ -1,19 +1,75 @@
 <view class="container">
   <view class="header">
     <view class="title">我们的菜品库</view>
-    <view class="count" wx:if="{{dishes.length}}">共 {{dishes.length}} 道菜</view>
+    <view class="count" wx:if="{{!loading}}">共 {{dishes.length}} 道菜</view>
   </view>
 
-  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <text class="search-icon">🔍</text>
+    <input
+      class="search-input"
+      placeholder="搜索菜品"
+      placeholder-class="search-placeholder"
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+    />
+  </view>
 
-  <view wx:elif="{{dishes.length === 0}}" class="empty">
-    <view class="empty-text">还没有菜品哦</view>
-    <view class="empty-tip">去添加第一道菜吧</view>
+  <!-- 分类筛选 -->
+  <view class="filter-row" wx:if="{{categories.length > 1}}">
+    <text class="filter-label">分类</text>
+    <scroll-view class="filter-scroll" scroll-x="true">
+      <view
+        wx:for="{{categories}}"
+        wx:key="*this"
+        class="chip {{activeCategory === item ? 'active' : ''}}"
+        data-category="{{item}}"
+        bindtap="selectCategory"
+      >{{item}}</view>
+    </scroll-view>
+  </view>
+
+  <!-- 排序 -->
+  <view class="filter-row">
+    <text class="filter-label">排序</text>
+    <scroll-view class="filter-scroll" scroll-x="true">
+      <view
+        wx:for="{{sortOptions}}"
+        wx:key="key"
+        class="chip {{sortBy === item.key ? 'active' : ''}}"
+        data-sort="{{item.key}}"
+        bindtap="selectSort"
+      >{{item.label}}</view>
+    </scroll-view>
+  </view>
+
+  <!-- 通缉榜筛选 -->
+  <view class="want-filter-row">
+    <view
+      class="chip {{wantFilter ? 'active' : ''}}"
+      bindtap="toggleWantFilter"
+    >{{wantFilter ? '仅看通缉榜' : '只看通缉榜'}}</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-dots">
+      <view></view>
+      <view></view>
+      <view></view>
+    </view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <view wx:elif="{{dishes.length === 0}}" class="empty-state">
+    <text class="empty-icon">🍲</text>
+    <view class="empty-title">还没有菜品哦</view>
+    <view class="empty-subtitle">去添加第一道菜吧</view>
   </view>
 
   <view wx:else class="list">
     <view
-      class="dish-card"
+      class="card dish-card"
       wx:for="{{dishes}}"
       wx:key="_id"
       data-id="{{item._id}}"
@@ -21,9 +77,9 @@
     >
       <view class="dish-name">{{item.name}}</view>
       <view class="dish-card-row">
-        <view class="dish-category">{{item.category || '未分类'}}</view>
+        <text class="tag">{{item.category || '未分类'}}</text>
         <view
-          class="want-btn {{item.inWantPool ? 'want-btn-disabled' : ''}}"
+          class="btn btn-sm {{item.inWantPool ? 'btn-ghost' : 'btn-secondary'}}"
           data-id="{{item._id}}"
           catchtap="addToWantList"
         >
@@ -34,5 +90,7 @@
   </view>
 
   <!-- 底部添加按钮 -->
-  <view class="add-btn" bindtap="goAddDish">＋ 添加新菜品</view>
+  <view class="float-btn">
+    <view class="btn btn-primary" bindtap="goAddDish">+ 添加新菜品</view>
+  </view>
 </view>

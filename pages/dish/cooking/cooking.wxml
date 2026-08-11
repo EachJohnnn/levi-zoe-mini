@@ -1,7 +1,12 @@
 <view class="container">
   <!-- 加载中 -->
-  <view wx:if="{{loading}}" class="loading">
-    <view class="loading-text">AI 正在规划做菜流程...</view>
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-dots">
+      <view></view>
+      <view></view>
+      <view></view>
+    </view>
+    <text class="loading-text">AI 正在规划做菜流程...</text>
   </view>
 
   <!-- 错误提示 -->

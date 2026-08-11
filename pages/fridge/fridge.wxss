@@ -1,10 +1,10 @@
 page {
-  background: #FFF5F5;
+  background: #FFF8F8;
 }
 
 .container {
   min-height: 100vh;
-  background: #FFF5F5;
+  background: #FFF8F8;
   padding: 24rpx 20rpx 200rpx;
   box-sizing: border-box;
 }
@@ -190,19 +190,6 @@ page {
 .action-btn.delete {
   border-color: #ff4d4f;
   color: #ff4d4f;
-}
-
-/* 空状态 */
-.empty {
-  text-align: center;
-  padding: 80rpx 0;
-  color: #bbb;
-  font-size: 28rpx;
-}
-
-.empty-icon {
-  font-size: 80rpx;
-  margin-bottom: 16rpx;
 }
 
 /* 底部推荐按钮 */

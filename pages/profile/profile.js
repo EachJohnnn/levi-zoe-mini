@@ -6,6 +6,7 @@ Page({
     coupleId: null,
     coupleName: '',
     coupleMembers: [],
+    inviteCode: '',
     isCreator: false,
     editingName: false,
     newCoupleName: ''
@@ -39,6 +40,7 @@ Page({
         this.setData({
           coupleName: data.name || '我们的小厨房',
           coupleMembers: data.members || [],
+          inviteCode: data.inviteCode || '',
           isCreator
         })
       })
@@ -103,6 +105,21 @@ Page({
             wx.showToast({ title: '修改失败', icon: 'none' })
           })
         }
+      }
+    })
+  },
+
+  // 一键复制邀请码
+  copyInviteCode() {
+    const inviteCode = this.data.inviteCode
+    if (!inviteCode) {
+      wx.showToast({ title: '暂无邀请码', icon: 'none' })
+      return
+    }
+    wx.setClipboardData({
+      data: inviteCode,
+      success: () => {
+        wx.showToast({ title: '邀请码已复制', icon: 'success' })
       }
     })
   },

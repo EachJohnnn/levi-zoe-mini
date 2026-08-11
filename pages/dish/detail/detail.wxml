@@ -37,13 +37,20 @@
 
 <!-- 底部操作按钮 -->
   <view class="btn-group">
-    <button class="btn primary" bindtap="goEdit">编辑菜谱</button>
-    <button class="btn danger" bindtap="onDelete">删除这道菜</button>
-    <button class="btn" bindtap="addToWantList">加入美食通缉榜</button>
+    <view class="btn btn-primary" bindtap="goEdit">编辑菜谱</view>
+    <view class="btn btn-danger" bindtap="onDelete">删除这道菜</view>
+    <view class="btn btn-secondary" bindtap="addToWantList">加入美食通缉榜</view>
   </view>
 
 </view>
 
 
 
-<view wx:if="{{loading}}" class="loading">加载中...</view>
+<view wx:if="{{loading}}" class="loading-wrap">
+  <view class="loading-dots">
+    <view></view>
+    <view></view>
+    <view></view>
+  </view>
+  <text class="loading-text">加载中...</text>
+</view>

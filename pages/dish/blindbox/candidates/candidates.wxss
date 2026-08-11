@@ -1,10 +1,9 @@
 page {
-  background: #FFF5F5;
+  background: var(--bg);
 }
 
 .container {
   min-height: 100vh;
-  background: #FFF5F5;
   padding: 24rpx 20rpx 160rpx;
   box-sizing: border-box;
 }
@@ -84,14 +83,6 @@ page {
   padding: 8rpx 16rpx;
   border-radius: 12rpx;
   display: inline-block;
-}
-
-/* 空状态 */
-.empty {
-  text-align: center;
-  padding: 120rpx 0;
-  color: #999;
-  font-size: 30rpx;
 }
 
 /* 底部 */

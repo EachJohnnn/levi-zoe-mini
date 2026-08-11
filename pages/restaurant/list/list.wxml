@@ -11,7 +11,16 @@
     />
   </view>
 
-  <!-- 筛选标签 -->
+  <!-- 地图入口 -->
+  <view class="map-card" bindtap="goMap">
+    <view class="map-card-info">
+      <text class="map-card-title">🗺️ 地图模式</text>
+      <text class="map-card-sub">在地图上查看收藏餐厅</text>
+    </view>
+    <view class="map-card-arrow">›</view>
+  </view>
+
+  <!-- 筛选标签：全部/想去/已打卡 -->
   <view class="filter-tabs">
     <view
       wx:for="{{filterTabs}}"
@@ -20,6 +29,53 @@
       data-filter="{{item.key}}"
       bindtap="switchFilter"
     >{{item.label}}</view>
+  </view>
+
+  <!-- 菜系筛选 -->
+  <view class="filter-row" wx:if="{{cuisineTags.length > 1}}">
+    <text class="filter-label">菜系</text>
+    <scroll-view class="filter-scroll" scroll-x="true" enable-flex="true">
+      <view
+        wx:for="{{cuisineTags}}"
+        wx:key="*this"
+        class="chip {{activeCuisine === item ? 'active' : ''}}"
+        data-cuisine="{{item}}"
+        bindtap="selectCuisine"
+      >{{item}}</view>
+    </scroll-view>
+  </view>
+
+  <!-- 距离筛选 -->
+  <view class="filter-row">
+    <text class="filter-label">距离</text>
+    <view class="filter-chips">
+      <view
+        wx:for="{{distanceOptions}}"
+        wx:key="value"
+        class="chip {{activeDistance === item.value ? 'active' : ''}}"
+        data-value="{{item.value}}"
+        bindtap="selectDistance"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <!-- 排序方式 -->
+  <view class="filter-row">
+    <text class="filter-label">排序</text>
+    <view class="filter-chips">
+      <view
+        wx:for="{{sortOptions}}"
+        wx:key="key"
+        class="chip {{sortBy === item.key ? 'active' : ''}}"
+        data-sort="{{item.key}}"
+        bindtap="switchSort"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <!-- 位置提示 -->
+  <view class="location-hint" wx:if="{{locationError && !userLocation}}">
+    {{locationError}}
   </view>
 
   <!-- 统计 -->
@@ -67,14 +123,20 @@
   <!-- 空状态 -->
   <view class="empty-state" wx:if="{{!loading && filteredRestaurants.length === 0}}">
     <text class="empty-icon">🍽️</text>
-    <text class="empty-text">
+    <view class="empty-title">
       {{activeFilter === 'all' ? '还没有记录任何餐厅' : (activeFilter === 'want' ? '还没有标记想去的餐厅' : '还没有打卡记录')}}
-    </text>
-    <text class="empty-hint">点击下方按钮添加第一家餐厅吧</text>
+    </view>
+    <view class="empty-subtitle" wx:if="{{activeCuisine !== '全部菜系' || activeDistance > 0}}">换个筛选条件试试看</view>
+    <view class="empty-subtitle" wx:else>点击下方按钮添加第一家餐厅吧</view>
   </view>
 
   <!-- 加载中 -->
   <view class="loading-wrap" wx:if="{{loading}}">
+    <view class="loading-dots">
+      <view></view>
+      <view></view>
+      <view></view>
+    </view>
     <text class="loading-text">加载中...</text>
   </view>
 

@@ -1,6 +1,6 @@
 {
   "usingComponents": {},
   "enablePullDownRefresh": true,
-  "backgroundColor": "#FFF5F5",
+  "backgroundColor": "#FFF8F8",
   "navigationBarTitleText": "餐厅探索"
 }

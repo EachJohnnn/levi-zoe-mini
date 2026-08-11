@@ -1,21 +1,14 @@
 page {
-  background: #FFF5F5;
-}
-
-.container {
-  min-height: 100vh;
-  background: #FFF5F5;
-  padding: 24rpx 20rpx 40rpx;
-  box-sizing: border-box;
+  background: var(--bg);
 }
 
 /* 情侣信息卡片 */
 .couple-card {
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
-  border-radius: 24rpx;
+  background: linear-gradient(135deg, var(--coral-400), var(--coral-300));
+  border-radius: var(--radius-md);
   padding: 40rpx 32rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 8rpx 32rpx rgba(255, 107, 107, 0.3);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-md);
   text-align: center;
 }
 
@@ -23,7 +16,7 @@ page {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 24rpx;
+  gap: var(--space-sm);
   margin-bottom: 20rpx;
 }
 
@@ -33,23 +26,8 @@ page {
   align-items: center;
 }
 
-.avatar {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  border: 4rpx solid #fff;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.15);
-}
-
-.avatar-placeholder {
-  background: #ddd;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40rpx;
-  font-weight: 500;
-  box-sizing: border-box;
+.couple-card .avatar {
+  border-color: #fff;
 }
 
 .avatar-name {
@@ -73,70 +51,13 @@ page {
 
 .couple-subtitle {
   font-size: 24rpx;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.85);
   margin-top: 8rpx;
 }
 
-/* 未绑定状态 */
-.unbind-card {
-  background: #fff;
-  border-radius: 24rpx;
-  padding: 60rpx 40rpx;
-  text-align: center;
-  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
-}
-
-.unbind-title {
-  font-size: 36rpx;
-  color: #FF6B6B;
-  font-weight: bold;
-  margin-bottom: 16rpx;
-}
-
-.unbind-tip {
-  font-size: 28rpx;
-  color: #999;
-  margin-bottom: 32rpx;
-}
-
-.bind-btn {
-  width: 80%;
-  height: 80rpx;
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
-  color: #fff;
-  border-radius: 40rpx;
-  font-size: 30rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-}
-
-/* 今晚菜单卡片 */
+/* 通用卡片 */
 .menu-card {
-  background: #fff;
-  border-radius: 24rpx;
-  padding: 32rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.1);
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
-
-.card-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.card-action {
-  font-size: 26rpx;
-  color: #FF6B6B;
+  margin-bottom: var(--space-md);
 }
 
 /* 菜单菜品列表 */
@@ -150,14 +71,14 @@ page {
   display: flex;
   align-items: center;
   padding: 18rpx 20rpx;
-  background: #f9f9f9;
-  border-radius: 16rpx;
+  background: var(--gray-100);
+  border-radius: var(--radius-sm);
 }
 
 .dish-num {
   width: 44rpx;
   height: 44rpx;
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  background: linear-gradient(135deg, var(--coral-400), var(--coral-300));
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -170,42 +91,9 @@ page {
 
 .dish-name {
   font-size: 28rpx;
-  color: #333;
+  color: var(--gray-800);
   flex: 1;
-}
-
-.dish-category {
-  font-size: 22rpx;
-  color: #FF6B6B;
-  background: #FFF0F0;
-  padding: 4rpx 14rpx;
-  border-radius: 20rpx;
-  flex-shrink: 0;
-}
-
-/* 菜单项中的厨师标签 */
-.chef-info {
-  display: flex;
-  align-items: center;
-  margin-left: 12rpx;
-  background: #FFF8F8;
-  border-radius: 24rpx;
-  padding: 4rpx 12rpx 4rpx 4rpx;
-  flex-shrink: 0;
-}
-
-.chef-avatar-mini {
-  width: 36rpx;
-  height: 36rpx;
-  border-radius: 50%;
-  margin-right: 8rpx;
-  background: #eee;
-}
-
-.chef-name-mini {
-  font-size: 20rpx;
-  color: #FF6B6B;
-  max-width: 100rpx;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -215,50 +103,11 @@ page {
 .action-row {
   display: flex;
   gap: 16rpx;
-  margin-top: 20rpx;
+  margin-top: 24rpx;
 }
 
-.action-btn {
+.action-row .btn {
   flex: 1;
-  height: 72rpx;
-  border-radius: 36rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26rpx;
-}
-
-.action-btn.primary {
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
-  color: #fff;
-}
-
-.action-btn.secondary {
-  background: #f5f5f5;
-  color: #666;
-}
-
-/* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 40rpx 20rpx;
-}
-
-.empty-icon {
-  font-size: 60rpx;
-  margin-bottom: 16rpx;
-}
-
-.empty-title {
-  font-size: 28rpx;
-  color: #999;
-  margin-bottom: 8rpx;
-}
-
-.empty-subtitle {
-  font-size: 24rpx;
-  color: #bbb;
-  margin-bottom: 24rpx;
 }
 
 /* 快捷入口 */
@@ -266,17 +115,15 @@ page {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16rpx;
-  margin-top: 24rpx;
+  margin-top: var(--space-md);
 }
 
 .quick-item {
-  background: #fff;
-  border-radius: 20rpx;
-  padding: 28rpx;
+  padding: 32rpx 20rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 4rpx 18rpx rgba(255, 107, 107, 0.08);
+  text-align: center;
 }
 
 .quick-icon {
@@ -286,7 +133,7 @@ page {
 
 .quick-label {
   font-size: 26rpx;
-  color: #333;
+  color: var(--gray-800);
   font-weight: 500;
 }
 
@@ -301,8 +148,8 @@ page {
   display: flex;
   align-items: center;
   padding: 16rpx 20rpx;
-  background: #f9f9f9;
-  border-radius: 14rpx;
+  background: var(--gray-100);
+  border-radius: var(--radius-sm);
 }
 
 .want-badge {
@@ -312,20 +159,155 @@ page {
 
 .want-name {
   font-size: 28rpx;
-  color: #333;
+  color: var(--gray-800);
   flex: 1;
 }
 
-/* 加载中 */
-.loading-wrap {
+/* 厨师 mini 标签 */
+.chef-info {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 200rpx 40rpx;
+  margin-left: 12rpx;
+  background: var(--coral-100);
+  border-radius: var(--radius-pill);
+  padding: 4rpx 12rpx 4rpx 4rpx;
+  flex-shrink: 0;
 }
 
-.loading-text {
+.chef-name-mini {
+  font-size: 20rpx;
+  color: var(--coral-400);
+  max-width: 100rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 未绑定状态 */
+.unbind-card {
+  text-align: center;
+  padding: 80rpx 40rpx;
+}
+
+.unbind-title {
+  font-size: 36rpx;
+  color: var(--coral-400);
+  font-weight: bold;
+  margin-bottom: 16rpx;
+}
+
+.unbind-tip {
   font-size: 28rpx;
-  color: #999;
-  margin-top: 20rpx;
+  color: var(--text-sub);
+  margin-bottom: 32rpx;
+}
+
+/* 教程入口 */
+.tutorial-card {
+  margin-top: var(--space-md);
+  padding: 28rpx 32rpx;
+}
+
+.tutorial-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.tutorial-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: var(--gray-800);
+}
+
+.tutorial-action {
+  font-size: 26rpx;
+  color: var(--coral-400);
+}
+
+.tutorial-desc {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+/* 教程弹窗 */
+.tutorial-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 40rpx;
+}
+
+.tutorial-modal {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-height: 76vh;
+  padding: 32rpx;
+  box-shadow: var(--shadow-float);
+  display: flex;
+  flex-direction: column;
+}
+
+.tutorial-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.tutorial-modal-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: var(--gray-800);
+}
+
+.tutorial-modal-close {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.tutorial-list {
+  flex: 1;
+  overflow: hidden;
+  margin-bottom: 24rpx;
+}
+
+.tutorial-item {
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid var(--gray-100);
+}
+
+.tutorial-item:last-child {
+  border-bottom: none;
+}
+
+.tutorial-item-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: bold;
+  color: var(--gray-800);
+  margin-bottom: 8rpx;
+}
+
+.tutorial-item-desc {
+  display: block;
+  font-size: 26rpx;
+  color: var(--text-sub);
+  line-height: 1.5;
 }

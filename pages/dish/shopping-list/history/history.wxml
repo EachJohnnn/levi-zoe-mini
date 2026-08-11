@@ -46,8 +46,9 @@
       </view>
     </view>
 
-    <view class="empty" wx:else>
-      <view>还没有历史记录</view>
-      <view class="empty-tip">生成购物清单后会自动保存</view>
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">🛒</text>
+      <view class="empty-title">还没有历史记录</view>
+      <view class="empty-subtitle">生成购物清单后会自动保存</view>
     </view>
   </view>
