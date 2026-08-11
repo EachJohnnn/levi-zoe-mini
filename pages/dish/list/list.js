@@ -86,10 +86,6 @@ Page({
       categories: ['全部', ...Array.from(categorySet)],
       loading: false
     }, () => {
-      if (this.returning) {
-        this.returning = false
-        wx.pageScrollTo({ scrollTop: this.lastScrollTop, duration: 0 })
-      }
       this.applyFilter()
     })
   },
@@ -165,7 +161,18 @@ Page({
         break
     }
 
-    this.setData({ dishes: result })
+    this.setData({ dishes: result }, () => {
+      const app = getApp()
+      if (app.globalData.returnToDishList) {
+        app.globalData.returnToDishList = false
+        const scrollTop = app.globalData.dishListScrollTop || 0
+        if (scrollTop > 0) {
+          setTimeout(() => {
+            wx.pageScrollTo({ scrollTop, duration: 0 })
+          }, 50)
+        }
+      }
+    })
   },
 
   // 添加新菜
@@ -208,7 +215,9 @@ Page({
   // 点击菜品
   onDishTap(e) {
     const id = e.currentTarget.dataset.id
-    this.returning = true
+    const app = getApp()
+    app.globalData.returnToDishList = true
+    app.globalData.dishListScrollTop = this.lastScrollTop
     wx.navigateTo({
       url: `/pages/dish/detail/detail?id=${id}`
     })

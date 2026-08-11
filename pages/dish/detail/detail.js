@@ -51,6 +51,15 @@ Page({
     const dish = this.data.dish
     // 把当前菜谱数据存到全局，供编辑页使用
     getApp().globalData.generatedDish = dish
+
+    // 确保返回菜品库时恢复滚动位置
+    const pages = getCurrentPages()
+    const prevPage = pages[pages.length - 2]
+    if (prevPage) {
+      getApp().globalData.returnToDishList = true
+      getApp().globalData.dishListScrollTop = prevPage.lastScrollTop || 0
+    }
+
     wx.navigateTo({
       url: '/pages/dish/edit'
     })
